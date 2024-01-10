@@ -1,7 +1,30 @@
 ---
-title: "About me"
+title: "ABOUT ME"
 ---
+![The first time I saw a volcanic eruption!](Images/Lava.jpg){width=50% height=30%}
 
-Add some text and a figure describing myself.
+## **Background**
 
-For details, see the exercise instructions. 
+Hello! My name is Kelly Cao, and I am a first-year non-thesis Master's student in the IOB department. Most of my background is in wet lab experience, so I have much to learn. I am excited to get to know everyone!
+
+## **Education**
+
+Ms Bioinformatics, August 2023 - Present
+University of Georgia, Athens, GA
+
+Bs Chemistry, August 2017 - May 2021
+Georgia State University, Atlanta, GA
+
+## **Experience**
+
+In my limited experience with R, I had the privilege of collaborating with Dr. Pejman Rohani and Dr. Christian Gunnings on data cleaning, particularly with pertussis vaccination records provided by the CDC. Using basic functions like dplyr and readr, I've had to opportunity to clean and analyze fixed width format (FWF) data files and prepare it for analysis. This valuable experience provided me with insights into the complexities of working with public health data and reinforced my commitment to learning and refining my skills in data manipulation with R.
+
+I also have some limited experience working with Python, Matlab, and C++. 
+
+## **Hopes for the Class**
+
+I am taking this class in addition to a statistics class, so I'm hoping to dedicate my time to learn more about data analysis in a way I can apply to my work. 
+
+## **Interests**
+
+In my free time, I enjoy knitting and playing with my two cats. 

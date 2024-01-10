@@ -1,15 +1,18 @@
 ---
-title: "My website and data analysis portfolio"
+title: "Kelly Cao's Website and Data Analysis Portfolio"
 ---
+![](Images/KellyCao.jpg){width=50% height=30%}
 
-# Hello
 
-### And hello again
+# Hello!
 
-Welcome to **my website** and _data analysis portfolio._ 
+
+**Welcome to my website and _data analysis portfolio._ **
+
+I'll be compiling my projects for my Spring 2024 MADA class here.
 
 
 * Please use the `Menu Bar` above to look around.
 * Have fun!
+* Last Updated 01/10/2024
 
-**Feel free to change this text any way you want 😁!**
