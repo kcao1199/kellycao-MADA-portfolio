@@ -32,7 +32,7 @@
     "href": "aboutme.html#interests",
     "title": "ABOUT ME",
     "section": "Interests",
-    "text": "Interests\nIn my free time, I enjoy knitting and playing with my two cats."
+    "text": "Interests\nIn my free time, I enjoy knitting, hiking, and playing with my two cats.\nI’ve also started re-watching “Doctor Who” lately, and I am currently on the 4th season so far.\n\n\n\n\n\n\nMocha\n\n\n\n\n\n\n\nCocoa\n\n\n\n\n\nThey’re pandemic babies!"
   },
   {
     "objectID": "coding-exercise/coding-exercise.html",
@@ -243,5 +243,26 @@
     "title": "ABOUT ME",
     "section": "Hopes for the Class",
     "text": "Hopes for the Class\nI am taking this class in addition to a statistics class, so I’m hoping to dedicate my time to learn more about data analysis in a way I can apply to my work."
+  },
+  {
+    "objectID": "aboutme.html#here-are-my-two-cats",
+    "href": "aboutme.html#here-are-my-two-cats",
+    "title": "ABOUT ME",
+    "section": "Here are my two cats!",
+    "text": "Here are my two cats!\n\n\n\n\n\n\n\n(a)\n\n\n\n\nFigure 1:"
+  },
+  {
+    "objectID": "aboutme.html#some-photos",
+    "href": "aboutme.html#some-photos",
+    "title": "ABOUT ME",
+    "section": "Some Photos",
+    "text": "Some Photos\nMy two cats! They’re pandemic babies!\n\n\n\n\n\n\nMocha\n\n\n\n\n\n\n\nCocoa"
+  },
+  {
+    "objectID": "aboutme.html#interesting-resource",
+    "href": "aboutme.html#interesting-resource",
+    "title": "ABOUT ME",
+    "section": "Interesting Resource",
+    "text": "Interesting Resource\nA model that estimates and reports disease outbreaks with R using a Bayesian approach.\nGithub Link"
   }
 ]

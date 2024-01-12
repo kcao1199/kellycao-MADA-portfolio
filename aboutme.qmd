@@ -1,7 +1,9 @@
 ---
 title: "ABOUT ME"
 ---
-![The first time I saw a volcanic eruption!](Images/Lava.jpg){width=50% height=30%}
+![](Images/Lava.jpg){fig-align="left" width=300 height=400}
+
+The first time I saw a volcanic eruption!
 
 ## **Background**
 
@@ -27,4 +29,22 @@ I am taking this class in addition to a statistics class, so I'm hoping to dedic
 
 ## **Interests**
 
-In my free time, I enjoy knitting and playing with my two cats. 
+In my free time, I enjoy knitting, hiking, and playing with my two cats. 
+
+I've also started re-watching "Doctor Who" lately, and I am currently on the 4th season so far. 
+
+::: {layout-ncol=2}
+
+![Mocha](Images/Mocha.jpg){width="560" height="315"}
+
+![Cocoa](Images/Cocoa.jpg){width="315" height="150"}
+
+:::
+
+They're pandemic babies!
+
+## Interesting Resource
+A model that estimates and reports disease outbreaks with R using a Bayesian approach. 
+
+[Github Link](https://github.com/sarahhbellum/NobBS)
+
