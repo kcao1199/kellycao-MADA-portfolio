@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Your Name">
-<meta name="dcterms.date" content="2024-01-10">
+<meta name="author" content="Kelly Cao">
+<meta name="dcterms.date" content="2024-01-19">
 
-<title>YOURNAME Data Analysis Portfolio - Manuscript/Report Template for a Data Analysis Project</title>
+<title>Kelly Cao Data Analysis Portfolio - Data Analysis Project</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,26 +22,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -92,7 +107,7 @@ div.csl-indent {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a class="navbar-brand" href="../../../index.html">
-    <span class="navbar-title">YOURNAME Data Analysis Portfolio</span>
+    <span class="navbar-title">Kelly Cao Data Analysis Portfolio</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -131,7 +146,7 @@ div.csl-indent {
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../../../URL-TO-THIS-REPOSITORY-HERE" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/kcao1199/kellycao-MADA-portfolio" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -152,7 +167,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Manuscript/Report Template for a Data Analysis Project</h1>
+<h1 class="title">Data Analysis Project</h1>
 </div>
 
 
@@ -162,14 +177,14 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Your Name </p>
+             <p>Kelly Cao </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 10, 2024</p>
+      <p class="date">January 19, 2024</p>
     </div>
   </div>
   
@@ -179,8 +194,7 @@ div.csl-indent {
 
 </header>
 
-<p>The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed. You don’t need to have exactly these sections, but the content covering those sections should be addressed.</p>
-<p>This uses MS Word as output format. <a href="https://quarto.org/docs/output-formats/ms-word.html">See here</a> for more information. You can switch to other formats, like html or pdf. See <a href="https://quarto.org/">the Quarto documentation</a> for other formats.</p>
+<p><span style="color:blue"> <strong>ERICK MOLLINEDO contributed to this exercise.</strong> </span></p>
 <div class="cell">
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'here' was built under R version 4.3.2</code></pre>
@@ -188,174 +202,69 @@ div.csl-indent {
 </div>
 <section id="summaryabstract" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Summary/Abstract</h1>
-<p><em>Write a summary of your project.</em></p>
+<p>The following project was performed in three separate parts in collaboration with Erick Mollinedo. Part 1 involved producing the data set of interest. In this case, it was a data set that showed demographic information of people, such as height, weight, gender, income, and education level. Part 2 was performed by Erick, which involved processing and cleaning the data set. The last part involves analyzing the data using linear models.</p>
 <div style="page-break-after: always;"></div>
 </section>
 <section id="introduction" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Introduction</h1>
 <section id="general-background-information" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="general-background-information"><span class="header-section-number">2.1</span> General Background Information</h2>
-<p><em>Provide enough background on your topic that others can understand the why and how of your analysis</em></p>
+<p>The analysis is performed for practice and education purpose. A theorized, messy data set is provided, and a collaboration is performed to process, clean, and analyze the data set using R and Rstudio.</p>
 </section>
 <section id="description-of-data-and-data-source" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="description-of-data-and-data-source"><span class="header-section-number">2.2</span> Description of data and data source</h2>
-<p><em>Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section.</em></p>
+<p>The data is provided in a .xlsx file, which contain demographic information on 14 different individual. The demographic information include: height, weight, gender, income, and education level.</p>
 </section>
 <section id="questionshypotheses-to-be-addressed" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="questionshypotheses-to-be-addressed"><span class="header-section-number">2.3</span> Questions/Hypotheses to be addressed</h2>
-<p><em>State the research questions you plan to answer with this analysis.</em></p>
-<p>To cite other work (important everywhere, but likely happens first in introduction), make sure your references are in the bibtex file specified in the YAML header above (here <code>dataanalysis_template_references.bib</code>) and have the right bibtex key. Then you can include like this:</p>
-<p>Examples of reproducible research projects can for instance be found in <span class="citation" data-cites="mckay2020 mckay2020a">(<a href="#ref-mckay2020" role="doc-biblioref">McKay, Ebell, Billings, et al., 2020</a>; <a href="#ref-mckay2020a" role="doc-biblioref">McKay, Ebell, Dale, Shen, &amp; Handel, 2020</a>)</span></p>
+<p>What type of analysis can be performed? What can be determined when a linear model is applied to this dataset?</p>
 <div style="page-break-after: always;"></div>
 </section>
 </section>
 <section id="methods" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Methods</h1>
-<p><em>Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and all the details in the supplement.</em></p>
+<p>Part 1: The data set provided for the course is provided in a template from Andreas Handel (https://github.com/andreashandel/online-portfolio-template). The data was manually changed to provide two new categories to the data set. The two new categories added were: income and education level. The data set can be found in the folder <a href="https://github.com/kcao1199/kellycao-MADA-portfolio/tree/main">/kellycao-MADA-portfolio/starter-analysis-excercise/data/raw-data/exampledata2.xlsx</a> in the github.</p>
+<p>Part 2: The data set was processed and cleaned by Erick Mollinedo. The data was loaded and read with the package ‘readx1’. The codebook was looked at with the same package. The following used the package ‘skimr’ to assist in visualizing summary reading.</p>
+<p>When cleaning the data, the package ‘dplyer’ was used to mutate the incorrect data “sixty” into a numeric form in the height category. It was also used to remove the data from the person providing “6,” as the data provided for it had uncertainty. The person providing the weight value “7000” was also removed. The gender category was changed from character to categorical. In addition, Erick made changes to the added columns, by renaming “Income” to “Household Income” and “Education” to “Education Level.”</p>
+<p>He then saved the data to <a href="https://github.com/kcao1199/kellycao-MADA-portfolio/tree/main/starter-analysis-exercise/data/processed-data">/kellycao-MADA-portfolio/starter-analysis-excercise/data/processed-data/processeddata2.rds</a> in the github.</p>
+<p>Part 3: A statiscal analysis is performed with the lm() function. he statistical analysis was performed with a linear model fit between height as the outcome and the two new variables “Household Income” and “Education Level.” The result of the linear model fit is placed on a table with the tidyverse package. The table is then saved as <a href="https://github.com/kcao1199/kellycao-MADA-portfolio/tree/main/starter-analysis-exercise/results/tables-files">“resulttable3.rds”</a> in the github.</p>
 <section id="data-aquisition" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="data-aquisition"><span class="header-section-number">3.1</span> Data aquisition</h2>
-<p><em>As applicable, explain where and how you got the data. If you directly import the data from an online source, you can combine this section with the next.</em></p>
-</section>
-<section id="data-import-and-cleaning" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="data-import-and-cleaning"><span class="header-section-number">3.2</span> Data import and cleaning</h2>
-<p><em>Write code that reads in the file and cleans it so it’s ready for analysis. Since this will be fairly long code for most datasets, it might be a good idea to have it in one or several R scripts. If that is the case, explain here briefly what kind of cleaning/processing you do, and provide more details and well documented code somewhere (e.g.&nbsp;as supplement in a paper). All materials, including files that contain code, should be commented well so everyone can follow along.</em></p>
-</section>
-<section id="statistical-analysis" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="statistical-analysis"><span class="header-section-number">3.3</span> Statistical analysis</h2>
-<p><em>Explain anything related to your statistical analyses.</em></p>
+<p>The data is initially provided by Andreas Handel for the Spring 2024 MADA course. The data is then manipulated by Kelly Cao in part 1.</p>
 <div style="page-break-after: always;"></div>
 </section>
 </section>
 <section id="results" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Results</h1>
-<section id="exploratorydescriptive-analysis" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="exploratorydescriptive-analysis"><span class="header-section-number">4.1</span> Exploratory/Descriptive analysis</h2>
-<p><em>Use a combination of text/tables/figures to explore and describe your data. Show the most important descriptive results here. Additional ones should go in the supplement. Even more can be in the R and Quarto files that are part of your project.</em></p>
-<p><a href="#tbl-summarytable">Table&nbsp;1</a> shows a summary of the data.</p>
-<p>Note the loading of the data providing a <strong>relative</strong> path using the <code>../../</code> notation. (Two dots means a folder up). You never want to specify an <strong>absolute</strong> path like <code>C:\ahandel\myproject\results\</code> because if you share this with someone, it won’t work for them since they don’t have that path. You can also use the <code>here</code> R package to create paths. See examples of that below. <strong>I recommend the <code>here</code> package, but I’m showing the other approach here just in case you encounter it.</strong></p>
+<section id="figures-and-tables" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="figures-and-tables"><span class="header-section-number">4.1</span> Figures and Tables</h2>
+<p><a href="#fig-result1">Figure&nbsp;1</a> shows a boxplot of the height of the individuals stratified by the education of the individual</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="tbl-summarytable" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Table&nbsp;1: Data summary table.</caption>
-<colgroup>
-<col style="width: 5%">
-<col style="width: 7%">
-<col style="width: 5%">
-<col style="width: 7%">
-<col style="width: 7%">
-<col style="width: 8%">
-<col style="width: 9%">
-<col style="width: 6%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 6%">
-<col style="width: 6%">
-<col style="width: 6%">
-<col style="width: 6%">
-<col style="width: 6%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">skim_type</th>
-<th style="text-align: left;">skim_variable</th>
-<th style="text-align: right;">n_missing</th>
-<th style="text-align: right;">complete_rate</th>
-<th style="text-align: left;">factor.ordered</th>
-<th style="text-align: right;">factor.n_unique</th>
-<th style="text-align: left;">factor.top_counts</th>
-<th style="text-align: right;">numeric.mean</th>
-<th style="text-align: right;">numeric.sd</th>
-<th style="text-align: right;">numeric.p0</th>
-<th style="text-align: right;">numeric.p25</th>
-<th style="text-align: right;">numeric.p50</th>
-<th style="text-align: right;">numeric.p75</th>
-<th style="text-align: right;">numeric.p100</th>
-<th style="text-align: left;">numeric.hist</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">factor</td>
-<td style="text-align: left;">Gender</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: left;">M: 4, F: 3, O: 2</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">numeric</td>
-<td style="text-align: left;">Height</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">165.66667</td>
-<td style="text-align: right;">15.97655</td>
-<td style="text-align: right;">133</td>
-<td style="text-align: right;">156</td>
-<td style="text-align: right;">166</td>
-<td style="text-align: right;">178</td>
-<td style="text-align: right;">183</td>
-<td style="text-align: left;">▂▁▃▃▇</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">numeric</td>
-<td style="text-align: left;">Weight</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">70.11111</td>
-<td style="text-align: right;">21.24526</td>
-<td style="text-align: right;">45</td>
-<td style="text-align: right;">55</td>
-<td style="text-align: right;">70</td>
-<td style="text-align: right;">80</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">▇▂▃▂▂</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</section>
-<section id="basic-statistical-analysis" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="basic-statistical-analysis"><span class="header-section-number">4.2</span> Basic statistical analysis</h2>
-<p><em>To get some further insight into your data, if reasonable you could compute simple statistics (e.g.&nbsp;simple models with 1 predictor) to look for associations between your outcome(s) and each individual predictor variable. Though note that unless you pre-specified the outcome and main exposure, any “p&lt;0.05 means statistical significance” interpretation is not valid.</em></p>
-<p><a href="#fig-result">Figure&nbsp;1</a> shows a scatterplot figure produced by one of the R scripts.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-result" class="quarto-figure quarto-figure-center anchored">
+<div id="fig-result1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p><img src="../../results/figures/height-weight-stratified.png" class="img-fluid figure-img" width="1050"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Height and weight stratified by gender.</figcaption>
+<p><img src="../../results/figures/height-education.png" class="img-fluid figure-img" width="1050"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Figure showing the heights of the individual stratified by their education level: Associate Degree (AD), Bachelor’s Degree (BD), Graduate/PRofessional Degree (GD), High School/GED (HS), Some College but no degree (SoCo), and Vocational Training (VT).</figcaption>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="full-analysis" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="full-analysis"><span class="header-section-number">4.3</span> Full analysis</h2>
-<p><em>Use one or several suitable statistical/machine learning methods to analyze your data and to produce meaningful figures, tables, etc. This might again be code that is best placed in one or several separate R scripts that need to be well documented. You want the code to produce figures and data ready for display as tables, and save those. Then you load them here.</em></p>
-<p>Example <a href="#tbl-resulttable2">Table&nbsp;2</a> shows a summary of a linear model fit.</p>
+<p><a href="#fig-result2">Figure&nbsp;2</a> shows a scatterplot of the weight of the individuals stratified by the income of the individual</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="tbl-resulttable2" class="anchored">
+<div id="fig-result2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="../../results/figures/income-weight.png" class="img-fluid figure-img" width="1050"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Figure showing the weigth of the individual stratified by the income of the individual in USD.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-resulttable3" class="anchored">
 <table class="table table-sm table-striped small">
-<caption>Table&nbsp;2: Linear model fit table.</caption>
+<caption>Table&nbsp;1: Linear model fit table using height as outcome, Household income and Education Level as predictor.</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">term</th>
@@ -368,78 +277,112 @@ div.csl-indent {
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">149.2726967</td>
-<td style="text-align: right;">23.3823360</td>
-<td style="text-align: right;">6.3839942</td>
-<td style="text-align: right;">0.0013962</td>
+<td style="text-align: right;">115.4778103</td>
+<td style="text-align: right;">97.7717435</td>
+<td style="text-align: right;">1.1810960</td>
+<td style="text-align: right;">0.3589881</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Weight</td>
-<td style="text-align: right;">0.2623972</td>
-<td style="text-align: right;">0.3512436</td>
-<td style="text-align: right;">0.7470519</td>
-<td style="text-align: right;">0.4886517</td>
+<td style="text-align: left;">Income</td>
+<td style="text-align: right;">0.0008767</td>
+<td style="text-align: right;">0.0013885</td>
+<td style="text-align: right;">0.6314247</td>
+<td style="text-align: right;">0.5923064</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">GenderM</td>
-<td style="text-align: right;">-2.1244913</td>
-<td style="text-align: right;">15.5488953</td>
-<td style="text-align: right;">-0.1366329</td>
-<td style="text-align: right;">0.8966520</td>
+<td style="text-align: left;">EducationBD</td>
+<td style="text-align: right;">-37.7545890</td>
+<td style="text-align: right;">45.2810144</td>
+<td style="text-align: right;">-0.8337841</td>
+<td style="text-align: right;">0.4921231</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">GenderO</td>
-<td style="text-align: right;">-4.7644739</td>
-<td style="text-align: right;">19.0114155</td>
-<td style="text-align: right;">-0.2506112</td>
-<td style="text-align: right;">0.8120871</td>
+<td style="text-align: left;">EducationGD</td>
+<td style="text-align: right;">-46.0711960</td>
+<td style="text-align: right;">64.0386221</td>
+<td style="text-align: right;">-0.7194283</td>
+<td style="text-align: right;">0.5465848</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EducationHS</td>
+<td style="text-align: right;">28.0416531</td>
+<td style="text-align: right;">57.2131095</td>
+<td style="text-align: right;">0.4901264</td>
+<td style="text-align: right;">0.6725369</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EducationSoCo</td>
+<td style="text-align: right;">-4.8880679</td>
+<td style="text-align: right;">37.2651912</td>
+<td style="text-align: right;">-0.1311698</td>
+<td style="text-align: right;">0.9076453</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EducationVT</td>
+<td style="text-align: right;">-28.6529579</td>
+<td style="text-align: right;">39.7491709</td>
+<td style="text-align: right;">-0.7208442</td>
+<td style="text-align: right;">0.5458763</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 </div>
+<p>The code used to perform the linear fit analysis is shown below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load needed packages. make sure they are installed.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co">#for plotting</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co">#for cleaning up output from lm()</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here) <span class="co">#for data loading/saving</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#path to data</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#note the use of the here() package and not absolute paths</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>data_location <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"starter-analysis-exercise"</span>,<span class="st">"data"</span>,<span class="st">"processed-data"</span>,<span class="st">"processeddata2.rds"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#load data. </span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(data_location)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># fit linear model using height as outcome, Household income and Education Level as predictor</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>lmfit3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Height <span class="sc">~</span> <span class="st">`</span><span class="at">Income</span><span class="st">`</span> <span class="sc">+</span> <span class="st">`</span><span class="at">Education</span><span class="st">`</span>, mydata)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># place results from fit into a data frame with the tidy function</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>lmtable3 <span class="ot">&lt;-</span> broom<span class="sc">::</span><span class="fu">tidy</span>(lmfit3)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#look at fit results</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lmtable3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 5
+  term            estimate std.error statistic p.value
+  &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 (Intercept)   115.        97.8         1.18    0.359
+2 Income          0.000877   0.00139     0.631   0.592
+3 EducationBD   -37.8       45.3        -0.834   0.492
+4 EducationGD   -46.1       64.0        -0.719   0.547
+5 EducationHS    28.0       57.2         0.490   0.673
+6 EducationSoCo  -4.89      37.3        -0.131   0.908
+7 EducationVT   -28.7       39.7        -0.721   0.546</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save fit results table  </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>table_file3 <span class="ot">=</span> <span class="fu">here</span>(<span class="st">"starter-analysis-exercise"</span>,<span class="st">"results"</span>, <span class="st">"tables-files"</span>, <span class="st">"resulttable3.rds"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(lmtable3, <span class="at">file =</span> table_file3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="full-analysis-and-conclusion" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="full-analysis-and-conclusion"><span class="header-section-number">4.2</span> Full analysis and Conclusion</h2>
+<p>It appears that the individuals with the graduate degree showed the greatest variation in height in accordance to Figure 1. In the other education level, there is little variation in height. As for the comparison between income and weight, there appears to be little correlation between the two variables. Despite that, there is a slight negative relation between income and weight when showing a line of best fit.</p>
+<p>In Table 1, the intercept provided an extremely high p=value, thus showing that the income and education variable affecting the height can not be proven or concluded.</p>
 <div style="page-break-after: always;"></div>
 </section>
 </section>
-<section id="discussion" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Discussion</h1>
-<section id="summary-and-interpretation" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="summary-and-interpretation"><span class="header-section-number">5.1</span> Summary and Interpretation</h2>
-<p><em>Summarize what you did, what you found and what it means.</em></p>
-</section>
-<section id="strengths-and-limitations" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="strengths-and-limitations"><span class="header-section-number">5.2</span> Strengths and Limitations</h2>
-<p><em>Discuss what you perceive as strengths and limitations of your analysis.</em></p>
-</section>
-<section id="conclusions" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="conclusions"><span class="header-section-number">5.3</span> Conclusions</h2>
-<p><em>What are the main take-home messages?</em></p>
-<p><em>Include citations in your Rmd file using bibtex, the list of references will automatically be placed at the end</em></p>
-<p>This paper <span class="citation" data-cites="leek2015">(<a href="#ref-leek2015" role="doc-biblioref">Leek &amp; Peng, 2015</a>)</span> discusses types of analyses.</p>
-<p>These papers <span class="citation" data-cites="mckay2020 mckay2020a">(<a href="#ref-mckay2020" role="doc-biblioref">McKay, Ebell, Billings, et al., 2020</a>; <a href="#ref-mckay2020a" role="doc-biblioref">McKay, Ebell, Dale, et al., 2020</a>)</span> are good examples of papers published using a fully reproducible setup similar to the one shown in this template.</p>
-<p>Note that this cited reference will show up at the end of the document, the reference formatting is determined by the CSL file specified in the YAML header. Many more style files for almost any journal <a href="https://www.zotero.org/styles">are available</a>. You also specify the location of your bibtex reference file in the YAML. You can call your reference file anything you like, I just used the generic word <code>references.bib</code> but giving it a more descriptive name is probably better.</p>
-<div style="page-break-after: always;"></div>
-</section>
-</section>
-<section id="references" class="level1" data-number="6">
-
-
+<section id="references" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> References</h1>
+<p>https://github.com/kcao1199/kellycao-MADA-portfolio/tree/main</p>
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">6 References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-line-spacing="2" role="list">
-<div id="ref-leek2015" class="csl-entry" role="listitem">
-Leek, J. T., &amp; Peng, R. D. (2015). Statistics. <span>What</span> is the question? <em>Science (New York, N.Y.)</em>, <em>347</em>(6228), 1314–1315. <a href="https://doi.org/10.1126/science.aaa6146">https://doi.org/10.1126/science.aaa6146</a>
-</div>
-<div id="ref-mckay2020" class="csl-entry" role="listitem">
-McKay, B., Ebell, M., Billings, W. Z., Dale, A. P., Shen, Y., &amp; Handel, A. (2020). Associations <span>Between Relative Viral Load</span> at <span>Diagnosis</span> and <span>Influenza A Symptoms</span> and <span>Recovery</span>. <em>Open Forum Infectious Diseases</em>, <em>7</em>(11), ofaa494. <a href="https://doi.org/10.1093/ofid/ofaa494">https://doi.org/10.1093/ofid/ofaa494</a>
-</div>
-<div id="ref-mckay2020a" class="csl-entry" role="listitem">
-McKay, B., Ebell, M., Dale, A. P., Shen, Y., &amp; Handel, A. (2020). Virulence-mediated infectiousness and activity trade-offs and their impact on transmission potential of influenza patients. <em>Proceedings. Biological Sciences</em>, <em>287</em>(1927), 20200496. <a href="https://doi.org/10.1098/rspb.2020.0496">https://doi.org/10.1098/rspb.2020.0496</a>
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
