@@ -78,14 +78,13 @@ Just a great source to visually see the commands already rendered for `ggplot2`:
 
 ```{r, style='background-color: lightgray;'}
 #Using the package ggplot2 (which is found in tidyverse) to create a scatter plot using the variables in the object 'IM_LE' and assigning it to the variable 'p1'
-p1 <- 
-  ggplot(IM_LE, aes(x = infant_mortality, y = life_expectancy))+geom_point()+
-  ggtitle('Infant Mortality vs Life Expectancy')+
-  theme(plot.title= element_text(hjust=0.5))+
-  xlab('Infant Mortality(death/100)')+
-  ylab('Life Expectancy (years)')+
-  labs(caption = "Figure 1: The life expectancy in years plotted as a function of the infant deaths per 100 infant from 1960-2016.")+
-  theme(plot.caption = element_text(hjust=0, face="bold"))
+p1 <- ggplot(IM_LE, aes(x = infant_mortality, y = life_expectancy))+geom_point()+
+      ggtitle('Infant Mortality vs Life Expectancy')+
+      theme(plot.title= element_text(hjust=0.5))+
+      xlab('Infant Mortality(death/100)')+
+      ylab('Life Expectancy (years)')+
+      labs(caption = "Figure 1: The life expectancy in years plotted as a function of the infant deaths per 100 infant from 1960-2016.")+
+      theme(plot.caption = element_text(hjust=0, face="bold"))
 
 #The theme() function was a great way to manipulate the specific element in the plot, whether it was color, size, or orientation of the text or visuals.
 
@@ -94,12 +93,12 @@ plot(p1)
 
 #Repeating the previous step(s) to plot Pop_LE into the object 'p2'. The data is heavily clustered together due to the immense magnitude of the population, so the population axis was scaled by taking the logarithm of it.
 p2 <- ggplot(Pop_LE, aes(x = log(population), y = life_expectancy))+geom_point()+
-  ggtitle('Country Population vs Life Expectancy')+
-  theme(plot.title= element_text(hjust=0.5))+
-  xlab('log(Population)')+
-  ylab('Life Expectancy (years)')+
-  labs(caption = "Figure 1: The life expectancy in years plotted as a function of the population in African countries from 1960-2016.")+
-  theme(plot.caption = element_text(hjust=0, face="bold"))
+      ggtitle('Country Population vs Life Expectancy')+
+      theme(plot.title= element_text(hjust=0.5))+
+      xlab('log(Population)')+
+      ylab('Life Expectancy (years)')+
+      labs(caption = "Figure 1: The life expectancy in years plotted as a function of the population in African countries from 1960-2016.")+
+      theme(plot.caption = element_text(hjust=0, face="bold"))
 
 #Using the plot() function to determine if the plot was properly created
 plot(p2)
@@ -107,7 +106,7 @@ plot(p2)
 
 The plots shown above shows a negative correlation between infant mortality and life expectancy. The second plot shows a positive correlation between population size and life expectancy, showing that people tend to live longer as the population grows. 
 
-The 'streaks' of data that is shown in the plot can be explained by the continuous collection of data from certain locations over the span of several years. As indicated in plot 'p2', a countries' population tend to increase over time. 
+The "streaks" of data that is shown in the plot can be explained by the continuous collection of data from certain locations over the span of several years. As indicated in plot `p2`, a countries' population tend to increase over time. 
 
 ## *More* Data Processing
 I had to search how to use the `filter()` function to exclude any categories that had data, and I found the solution in the [R for Health Data Science website](https://argoshare.is.ed.ac.uk/healthyr_book/missing-values-nas-and-filters.html). 
@@ -155,31 +154,30 @@ There are 226 missing data point for infant mortality between 1960-2016. In the 
 
 ```{r, style='background-color: lightgray;'}
 #Using the package ggplot2 to plot Life expectancy vs infant mortality for the year 2000 in 'p3' 
-p3 <- 
-  ggplot(year2000, aes(x = infant_mortality, y = life_expectancy))+geom_point()+
-  ggtitle('Infant Mortality vs Life Expectancy')+
-  theme(plot.title= element_text(hjust=0.5))+
-  xlab('Infant Mortality(death/100)')+
-  ylab('Life Expectancy (years)')+
-  labs(caption = "Figure 1: The life expectancy in years plotted as a function of the infant deaths per 100 infant in 2000.")+
-  theme(plot.caption = element_text(hjust=0, face="bold"))
+p3 <- ggplot(year2000, aes(x = infant_mortality, y = life_expectancy))+geom_point()+geom_smooth(method = "lm")+
+      ggtitle('Infant Mortality vs Life Expectancy')+
+      theme(plot.title= element_text(hjust=0.5))+
+      xlab('Infant Mortality(death/100)')+
+      ylab('Life Expectancy (years)')+
+      labs(caption = "Figure 1: The life expectancy in years plotted as a function of the infant deaths per 100 infant in 2000.")+
+      theme(plot.caption = element_text(hjust=0, face="bold"))
 
 #Using the plot() function to determine if the plot was properly created
 plot(p3)
 
 #Repeating the previous step(s) to plot 'year2000' into the object 'p4'. Once again, the log(population) is used to scale and visualize trend with more clarity.
-p4 <- ggplot(year2000, aes(x = log(population), y = life_expectancy))+geom_point()+
-  ggtitle('Country Population vs Life Expectancy')+
-  theme(plot.title= element_text(hjust=0.5))+
-  xlab('log(Population)')+
-  ylab('Life Expectancy (years)')+
-  labs(caption = "Figure 1: The life expectancy in years plotted as a function of the population in African countries in 2000.")+
-  theme(plot.caption = element_text(hjust=0, face="bold"))
+p4 <- ggplot(year2000, aes(x = log(population), y = life_expectancy))+geom_point()+geom_smooth(method = "lm")+
+      ggtitle('Country Population vs Life Expectancy')+
+      theme(plot.title= element_text(hjust=0.5))+
+      xlab('log(Population)')+
+      ylab('Life Expectancy (years)')+
+      labs(caption = "Figure 1: The life expectancy in years plotted as a function of the population in African countries in 2000.")+
+      theme(plot.caption = element_text(hjust=0, face="bold"))
 
 #Using the plot() function to determine if the plot was properly created
 plot(p4)
 ```
-Based on visually observing the plots, plot `p3` shows similar trend as 'p1` with negative correlation between infant mortality and life expectancy. However, in `p4`, the plot showed no noticable correlation, which contrasts greatly with plot `p2`.
+Based on visually observing the plots, plot `p3` shows similar trend as `p1` with negative correlation between infant mortality and life expectancy. However, in `p4`, the plot showed no noticeable correlation, which contrasts greatly with plot `p2`.
 
 ## Simple Model Fits
 The script shown below fits a linear model to the data frame `year2000`. The models sets the variables plotted above as its outcome and predictor.

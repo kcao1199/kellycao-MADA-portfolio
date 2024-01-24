@@ -1,0 +1,218 @@
+---
+title: "R Coding Exercise"
+---
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+
+#### This section will be utilized to learn basic R coding skills
+
+The following coding exercise will involve loading, viewing, processing, and visualizing the dataset provided with `gapminder`. 
+
+## Loading and Checking Data
+
+I usually start any script with installing and loading my required packages. The `dslab` package will be used provide our data set (`gapminder`) that will be analyzed below. The package `renv` which will be used to ensure reproducibility for a future date.
+
+Often times, when I'm using a new or unfamiliar package, I type in `?name_of_package` (e.g. `?tidyverse`) to familiarize myself more with the package and its different commands (e.g. `?filter()`).
+
+
+```{r, style='background-color: lightgray;'}
+#Installing and loading needed packages with the command install.packages() and the library() function
+library("dslabs")
+library(renv)
+library(tidyverse)
+
+#The help() function is used to look at data provided in 'gapminder'
+help(gapminder)
+
+#Check the summary and structure of the dataset 'gapminder'
+str(gapminder)
+summary(gapminder)
+
+#Determine the class type of gapminder
+class(gapminder)
+```
+
+
+
+## Processing Data
+In the script shown below for processing the data, I used a few commands found in `dplyr` and `magrittr`, both of which could be found in `tidyverse`. As I was previously exposed to R, I was informed that indentation was important to provide clarity in the code. 
+
+
+```{r, style='background-color: lightgray;'}
+#Assigning African countries in the dataset to newly created object 'africadata.' A pipe operator is used to pass the data set of 'gapminder' to the filter function call on the right of it.
+africadata <- 
+  gapminder %>%
+  filter(continent == 'Africa')
+#The filter() was used to filter out the rows of the data set where the continent is Africa only.
+
+#Running str() and summary() to determine structure and summary of the new object
+str(africadata)
+summary(africadata)
+
+#Creating a new object representing the variables 'infant mortality' and 'life expectancy' in 'IM_LE.' The select() function is used to specify the columns of interest. 
+IM_LE <- 
+  select(africadata, infant_mortality, life_expectancy)
+
+#Running str() and summary() to determine structure and summary of the new object
+str(IM_LE)
+summary(IM_LE)
+
+#Creating the object 'Pop_Le' to reflect the variables 'population' and 'life expectancy.'
+Pop_LE <-
+  select(africadata, population, life_expectancy)
+
+#Running str() and summary() to determine structure and summary of the new object
+str(Pop_LE)
+summary(Pop_LE)
+```
+
+
+
+## Plotting
+In the following script, I used the package `ggplot2`, which is also found in `tidyverse`. I initially based the script off of the plots we've previously made and followed that syntax, but I wanted to add more details and visuals to the plot.
+
+I then saw on a stack overflow page that there is a function that can be used to list the structure of functions in a specified environment (e.g. `lsf.str(ggplot2)`). That, however, listed a huge and overwhelmingly large list, so I settled with googling different ways to adjust the visual of the plot using `ggplot()`.
+
+::: {.callout-note}
+Just a great source to visually see the commands already rendered for `ggplot2`:
+
+<https://ggplot2.tidyverse.org/reference/lims.html>
+:::
+
+
+```{r, style='background-color: lightgray;'}
+#Using the package ggplot2 (which is found in tidyverse) to create a scatter plot using the variables in the object 'IM_LE' and assigning it to the variable 'p1'
+p1 <- ggplot(IM_LE, aes(x = infant_mortality, y = life_expectancy))+geom_point()+
+      ggtitle('Infant Mortality vs Life Expectancy')+
+      theme(plot.title= element_text(hjust=0.5))+
+      xlab('Infant Mortality(death/100)')+
+      ylab('Life Expectancy (years)')+
+      labs(caption = "Figure 1: The life expectancy in years plotted as a function of the infant deaths per 100 infant from 1960-2016.")+
+      theme(plot.caption = element_text(hjust=0, face="bold"))
+
+#The theme() function was a great way to manipulate the specific element in the plot, whether it was color, size, or orientation of the text or visuals.
+
+#Using the plot() function to determine if the plot was properly created
+plot(p1)
+
+#Repeating the previous step(s) to plot Pop_LE into the object 'p2'. The data is heavily clustered together due to the immense magnitude of the population, so the population axis was scaled by taking the logarithm of it.
+p2 <- ggplot(Pop_LE, aes(x = log(population), y = life_expectancy))+geom_point()+
+      ggtitle('Country Population vs Life Expectancy')+
+      theme(plot.title= element_text(hjust=0.5))+
+      xlab('log(Population)')+
+      ylab('Life Expectancy (years)')+
+      labs(caption = "Figure 1: The life expectancy in years plotted as a function of the population in African countries from 1960-2016.")+
+      theme(plot.caption = element_text(hjust=0, face="bold"))
+
+#Using the plot() function to determine if the plot was properly created
+plot(p2)
+```
+
+
+The plots shown above shows a negative correlation between infant mortality and life expectancy. The second plot shows a positive correlation between population size and life expectancy, showing that people tend to live longer as the population grows. 
+
+The "streaks" of data that is shown in the plot can be explained by the continuous collection of data from certain locations over the span of several years. As indicated in plot `p2`, a countries' population tend to increase over time. 
+
+## *More* Data Processing
+I had to search how to use the `filter()` function to exclude any categories that had data, and I found the solution in the [R for Health Data Science website](https://argoshare.is.ed.ac.uk/healthyr_book/missing-values-nas-and-filters.html). 
+
+::: {.callout-note appearance="minimal"}
+This also showed me how to filter out any rows that had any missing data set with an example shown below:
+
+```{r, style='background-color: lightgray;'}
+Random_example <-
+  africadata %>%
+  select(year, fertility)%>%
+  filter(!is.na(fertility))
+str(Random_example)
+summary(Random_example)
+```
+
+:::
+
+The following script is used to show the different years that have missing data for infant mortality.
+
+
+
+```{r, style='background-color: lightgray;'}
+#Filtering the data set to only include the years with missing data points for 'infant_mortality' in 'africadata' using the select() and filter() function. The 'is.na()' function allows you to filter out and identify missing or not available data. 
+inf_missing_data <- 
+  africadata %>%
+  select(year, infant_mortality)%>%
+  filter(is.na(infant_mortality))
+
+#Using str() and summary() function to determine if I filtered the dataset currently. I also used view() to visually see the object 'inf_missing_data'
+str(inf_missing_data)
+summary(inf_missing_data)
+
+#Creating a new object that consist of data for the year 2000
+year2000 <- 
+  africadata %>%
+  filter(year == '2000')
+
+#Using str() and summary() function to determine if I filtered the data set currently.
+str(year2000)
+summary(year2000)
+```
+
+
+There are 226 missing data point for infant mortality between 1960-2016. In the year 2000, there are 51 observations over 9 different variables.
+
+## *More* Plotting
+
+
+
+```{r, style='background-color: lightgray;'}
+#Using the package ggplot2 to plot Life expectancy vs infant mortality for the year 2000 in 'p3' 
+p3 <- ggplot(year2000, aes(x = infant_mortality, y = life_expectancy))+geom_point()+geom_smooth(method = "lm")+
+      ggtitle('Infant Mortality vs Life Expectancy')+
+      theme(plot.title= element_text(hjust=0.5))+
+      xlab('Infant Mortality(death/100)')+
+      ylab('Life Expectancy (years)')+
+      labs(caption = "Figure 1: The life expectancy in years plotted as a function of the infant deaths per 100 infant in 2000.")+
+      theme(plot.caption = element_text(hjust=0, face="bold"))
+
+#Using the plot() function to determine if the plot was properly created
+plot(p3)
+
+#Repeating the previous step(s) to plot 'year2000' into the object 'p4'. Once again, the log(population) is used to scale and visualize trend with more clarity.
+p4 <- ggplot(year2000, aes(x = log(population), y = life_expectancy))+geom_point()+geom_smooth(method = "lm")+
+      ggtitle('Country Population vs Life Expectancy')+
+      theme(plot.title= element_text(hjust=0.5))+
+      xlab('log(Population)')+
+      ylab('Life Expectancy (years)')+
+      labs(caption = "Figure 1: The life expectancy in years plotted as a function of the population in African countries in 2000.")+
+      theme(plot.caption = element_text(hjust=0, face="bold"))
+
+#Using the plot() function to determine if the plot was properly created
+plot(p4)
+```
+
+Based on visually observing the plots, plot `p3` shows similar trend as `p1` with negative correlation between infant mortality and life expectancy. However, in `p4`, the plot showed no noticeable correlation, which contrasts greatly with plot `p2`.
+
+## Simple Model Fits
+The script shown below fits a linear model to the data frame `year2000`. The models sets the variables plotted above as its outcome and predictor.
+
+I used the same syntax and format that was shared and used for the previous assignment for the lm() function.
+
+```{r, style='background-color: lightgray;'}
+#Fitting the data set to a linear model with 'life expectancy' as the outcome and 'infant mortality' as the predictor
+lmfit1 <- lm(life_expectancy ~ infant_mortality, year2000)
+
+#Use the summary() command to check over the fit 
+summary(lmfit1)
+
+#Fitting the data set to a linear model with 'life expectancy' as the outcome and 'population' as the predictor
+lmfit2 <- lm(life_expectancy ~ population, year2000)
+
+#Use the summary() command to check over the fit 
+summary(lmfit2)
+```
+
+Based on analysis performed above, `lmfit1` appears to be the better model. The p-value of the first model is extremely small, showing that the infant mortality is a significant predictor for the model. In the second model, the opposite is the case where its p-value > 0.05, proving it to be statistically insignificant. 
+
+
+
