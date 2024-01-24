@@ -25,7 +25,7 @@ website:
 format:
   html:
     theme: sketchy
-    highlight: zenburn
+    highlight: pygments
     css: styles.css
     toc: FALSE
 
