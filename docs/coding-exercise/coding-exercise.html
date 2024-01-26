@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -89,7 +89,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
@@ -596,6 +597,226 @@ F-statistic: 0.2549 on 1 and 49 DF,  p-value: 0.6159</code></pre>
 </div>
 </div>
 <p>Based on analysis performed above, <code>lmfit1</code> appears to be the better model. The p-value of the first model is extremely small, showing that the infant mortality is a significant predictor for the model. In the second model, the opposite is the case where its p-value &gt; 0.05, proving it to be statistically insignificant.</p>
+<p>#This Section contributed by Mutsa Nyamuranga</p>
+<p>We will be looking at the mice_weights data set in the dslabs package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dslabs)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(<span class="st">"mice_weights"</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(mice_weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   780 obs. of  7 variables:
+ $ body_weight : num  27.6 23 28.7 32.6 28.6 ...
+ $ bone_density: num  0.616 0.769 0.684 0.644 0.53 ...
+ $ percent_fat : num  7.26 4.95 6.02 9.54 6.99 ...
+ $ sex         : Factor w/ 2 levels "F","M": 1 1 1 1 1 1 1 1 1 1 ...
+ $ diet        : Factor w/ 2 levels "chow","hf": 1 1 1 1 1 1 1 1 1 1 ...
+ $ gen         : Factor w/ 5 levels "4","7","8","9",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ litter      : Factor w/ 2 levels "1","2": 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mice_weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  body_weight     bone_density     percent_fat     sex       diet     gen     
+ Min.   :18.13   Min.   :0.2708   Min.   : 2.552   F:398   chow:394   4 : 97  
+ 1st Qu.:28.09   1st Qu.:0.4888   1st Qu.: 5.566   M:382   hf  :386   7 :195  
+ Median :32.98   Median :0.5643   Median : 8.276                      8 :193  
+ Mean   :34.08   Mean   :0.5697   Mean   : 8.594                      9 : 97  
+ 3rd Qu.:39.37   3rd Qu.:0.6373   3rd Qu.:10.926                      11:198  
+ Max.   :65.15   Max.   :0.9980   Max.   :22.154                              
+                 NA's   :4        NA's   :4                                   
+ litter 
+ 1:442  
+ 2:338  
+        
+        
+        
+        
+        </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(mice_weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data.frame"</code></pre>
+</div>
+</div>
+<p>Next, I am going to filter the data set to only look at litter 1.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>firstlitter <span class="ot">&lt;-</span> mice_weights[mice_weights<span class="sc">$</span>litter <span class="sc">==</span> <span class="dv">1</span>, ]</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># To look at the first few rows of the new dataset</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(firstlitter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   442 obs. of  7 variables:
+ $ body_weight : num  27.6 23 28.7 32.6 28.6 ...
+ $ bone_density: num  0.616 0.769 0.684 0.644 0.53 ...
+ $ percent_fat : num  7.26 4.95 6.02 9.54 6.99 ...
+ $ sex         : Factor w/ 2 levels "F","M": 1 1 1 1 1 1 1 1 1 1 ...
+ $ diet        : Factor w/ 2 levels "chow","hf": 1 1 1 1 1 1 1 1 1 1 ...
+ $ gen         : Factor w/ 5 levels "4","7","8","9",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ litter      : Factor w/ 2 levels "1","2": 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(firstlitter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  body_weight     bone_density     percent_fat     sex       diet     gen     
+ Min.   :19.16   Min.   :0.2708   Min.   : 2.595   F:224   chow:246   4 : 50  
+ 1st Qu.:27.94   1st Qu.:0.5016   1st Qu.: 5.654   M:218   hf  :196   7 : 98  
+ Median :33.36   Median :0.5769   Median : 8.048                      8 : 97  
+ Mean   :34.37   Mean   :0.5792   Mean   : 8.486                      9 : 97  
+ 3rd Qu.:39.43   3rd Qu.:0.6463   3rd Qu.:10.647                      11:100  
+ Max.   :65.15   Max.   :0.9679   Max.   :22.154                              
+                 NA's   :1        NA's   :1                                   
+ litter 
+ 1:442  
+ 2:  0  
+        
+        
+        
+        
+        </code></pre>
+</div>
+</div>
+<p>I want to further analyze the relationships that sex and diet have with body weight in this filtered data. I will be creating two objects to further analyze: xxxx and xxxx.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new object with sex and body_weight</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>sexWeight <span class="ot">&lt;-</span> firstlitter[, <span class="fu">c</span>(<span class="st">"sex"</span>, <span class="st">"body_weight"</span>)]</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new object with diet and body_weight</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>dietWeight <span class="ot">&lt;-</span> firstlitter[, <span class="fu">c</span>(<span class="st">"diet"</span>, <span class="st">"body_weight"</span>)]</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dietWeight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   442 obs. of  2 variables:
+ $ diet       : Factor w/ 2 levels "chow","hf": 1 1 1 1 1 1 1 1 1 1 ...
+ $ body_weight: num  27.6 23 28.7 32.6 28.6 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dietWeight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   diet      body_weight   
+ chow:246   Min.   :19.16  
+ hf  :196   1st Qu.:27.94  
+            Median :33.36  
+            Mean   :34.37  
+            3rd Qu.:39.43  
+            Max.   :65.15  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(sexWeight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   442 obs. of  2 variables:
+ $ sex        : Factor w/ 2 levels "F","M": 1 1 1 1 1 1 1 1 1 1 ...
+ $ body_weight: num  27.6 23 28.7 32.6 28.6 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sexWeight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> sex      body_weight   
+ F:224   Min.   :19.16  
+ M:218   1st Qu.:27.94  
+         Median :33.36  
+         Mean   :34.37  
+         3rd Qu.:39.43  
+         Max.   :65.15  </code></pre>
+</div>
+</div>
+<p>Now we plot these new objects using scatter plots to see the distribution of body weights according to sex and diet.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot body weight as a function of sex</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sexWeight<span class="sc">$</span>sex, sexWeight<span class="sc">$</span>body_weight,</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Body Weight by Sex"</span>,</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Sex"</span>,</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Body Weight"</span>,</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>)  <span class="co"># Set the point type to a solid circle</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Add grid lines</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="coding-exercise_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot body weight as a function of diet</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dietWeight<span class="sc">$</span>diet, dietWeight<span class="sc">$</span>body_weight,</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Body Weight by Diet"</span>,</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Diet"</span>,</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Body Weight"</span>,</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>)  <span class="co"># Set the point type to a solid circle</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Add grid lines</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="coding-exercise_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>#Simple Linear Regression Models To analyze the effects of sex and diet on body weight, I used a simple regression model to test that there is a significant difference in the the mean body weight mice in the first litter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit linear regression with life expectancy as the outcome and infant mortality as the predictor</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>SimpleSex <span class="ot">&lt;-</span> <span class="fu">lm</span>(body_weight <span class="sc">~</span> sex, <span class="at">data =</span> firstlitter)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit linear regression with life expectancy as the outcome and population size (log scale) as the predictor</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>SimpleDiet <span class="ot">&lt;-</span> <span class="fu">lm</span>(body_weight <span class="sc">~</span> diet, <span class="at">data =</span> firstlitter)</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Print summary for fit1</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(SimpleSex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = body_weight ~ sex, data = firstlitter)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-14.846  -4.886  -1.208   4.147  35.317 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  29.8328     0.4578   65.16   &lt;2e-16 ***
+sexM          9.2033     0.6519   14.12   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 6.852 on 440 degrees of freedom
+Multiple R-squared:  0.3117,    Adjusted R-squared:  0.3102 
+F-statistic: 199.3 on 1 and 440 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print summary for fit2</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(SimpleDiet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = body_weight ~ diet, data = firstlitter)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-16.019  -5.758  -1.040   4.746  27.991 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  32.1512     0.5020  64.040  &lt; 2e-16 ***
+diethf        5.0080     0.7539   6.643 9.12e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 7.874 on 440 degrees of freedom
+Multiple R-squared:  0.09114,   Adjusted R-squared:  0.08907 
+F-statistic: 44.12 on 1 and 440 DF,  p-value: 9.124e-11</code></pre>
+</div>
+</div>
+<p>#Visualization fo the simple linear regression models Using the visreg and ggplot2 packages, I adding plots to display relationship of the data based on each catagorical variable. The fitted model is used to predict values of the response variable, across the range of the chosen explanatory variable. The other variables are set to their median value (for numeric variables) or most frequent category (for categorical variables).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot of Sex vs. Body Weight and Diet vs. Body Weight</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Set default CRAN mirror non-interactively</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="fu">local</span>({</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">getOption</span>(<span class="st">"repos"</span>)</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  r[<span class="st">"CRAN"</span>] <span class="ot">&lt;-</span> <span class="st">"http://cran.us.r-project.org"</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">options</span>(<span class="at">repos =</span> r)</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Now install the 'visreg' package or any other packages you need</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"visreg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+The downloaded binary packages are in
+    /var/folders/hj/hr23c97s45s6qm_wn3ywdf300000gn/T//RtmpuDQEYB/downloaded_packages</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(visreg)</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="fu">visreg</span>(SimpleSex, <span class="st">"sex"</span>, <span class="at">gg =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="coding-exercise_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">visreg</span>(SimpleDiet, <span class="st">"diet"</span>, <span class="at">gg=</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="coding-exercise_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>#Results</p>
+<p>##Sex vs.&nbsp;Body Weight For the first model, we analyzed the relationship sex on the mean body weights of mice in the first litter. With p&lt;.05, we can reject the null hypothesis that there is no difference in the body weights of male and female mice. From the output, we can conclude that the mean body weight for male mice is 9.2 grams greater than female mice.</p>
+<p>##Diet vs.&nbsp;Body Weight For the first model, we analyzed the relationship diet on the mean body weights of mice in the first litter. With p&lt;.05, we can reject the null hypothesis that there is no difference in the body weights of mice that ate chow and mice with a high fat diet. From the output, we can conclude that the mean body weight for mice with a high fat diet is 5.00 grams greater than mice that ate chow.</p>
 
 
 </section>
