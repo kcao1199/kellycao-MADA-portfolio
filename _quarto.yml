@@ -18,6 +18,8 @@ website:
             file: presentation-exercise/presentation-exercise.qmd
           - text: "Tidy Tuesday Exercise"
             file: tidytuesday-exercise/tidytuesday-exercise.qmd
+          - text: "Data Exercise"
+            file: data-exercise/data-exercise.qmd
     right:
       - icon: github 
         href: https://github.com/kcao1199/kellycao-MADA-portfolio      
