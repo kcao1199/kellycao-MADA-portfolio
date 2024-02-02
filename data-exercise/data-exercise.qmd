@@ -8,6 +8,64 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 #### This section will be utilized to explore complex data sets. 
 
-The following coding exercise will involve loading, viewing, processing, and visualizing the dataset provided
+The following exercise was designed to practice and explore complex data set. In the following example, I used the package `gutenbergr.`
 
 ## Loading and Checking Data
+I first installed and loaded my packages. I used the <Text Mining with R: A Tidy Approach> (https://www.tidytextmining.com/) resource to help guide me in analyzing this text. When I was stuck with some errors, I used ChatGPT to help diagnose the issue. 
+
+```{r, style='background-color: lightgray;'}
+#Loading packages
+library(gutenbergr)
+library(tidytext)
+library(dplyr)
+library(ggplot2)
+
+#Determining the Book ID for the "Andersen's Fairy Tales" in Project Gutenberg
+gutenberg_works(title == "Andersen's Fairy Tales")
+
+#Downloading the book with the book ID procured in the previous step into the object "andersens_text"
+andersens_text <- gutenberg_download(1597)
+```
+
+## Processing the Data
+The following step is used to restructure the data sets for easier analysis.I then removed any unnecessary words. The frequency of the remaining words are then recorded. 
+```{r, style='background-color: lightgray;'}
+#Tokenizing the text and transforming it into a tidy data structure with the 'unnest_tokens' function from 'tidytext'. This restructures the dataset to a on-token-per-row format. 
+andersen_tokens <- andersens_text %>%
+  unnest_tokens(word, text)
+
+#As explained the resource above, the following lines remove stop words or extremely common words. 
+data(stop_words)
+tidy_books <-andersen_tokens %>%
+  anti_join(stop_words)
+
+#The following lines uses the function count() to determine the frequency of each word and apply it to an object called 'word_freq'  
+word_freq <- tidy_books %>%
+  count(word, sort = TRUE)
+```
+
+## Plotting and Visualizing the Data
+I created a bar graph to better visualize the frequency of each words. 
+```{r, style='background-color: lightgray;'}
+##I then use the package ggplot2 to visualize my word frequency
+ggplot(head(word_freq, 10), aes(x = reorder(word, n), y = n)) +
+  geom_col() +
+  coord_flip() +
+  xlab("# of Occurence")+
+  ylab("Words")
+  labs(title = "Top 10 Words in Andersen's Fairy Tales")
+
+#The tidytextmining website provided this format of graphing the plot, and I readjusted it to fit my data set. I graphed this one to see any words with greater occurance than 50. 
+ tidy_books %>%
+    count(word, sort = TRUE) %>%
+    filter(n > 50) %>%
+    mutate(word = reorder(word, n)) %>%
+    ggplot(aes(n, word)) +
+    geom_col() +
+    xlab("# of Occurence")+
+    ylab("Words")+
+    labs(title = "Most Common Words")
+```
+
+## Conclusion
+The most common word in the book "Andersen's Fairy Tale" is `Gerda`, which is the name of one of the characters in "The Snow Queen", one of his tales. Of the other frequently used words, most of them were common words like 'tree' or 'looked'. I imagine moving forward, if I were to continue analyzing this book, I would find a way to omit these other common words. 
