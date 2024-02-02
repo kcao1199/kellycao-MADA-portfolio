@@ -109,7 +109,7 @@
     "href": "data-exercise/data-exercise.html",
     "title": "Data Exercise",
     "section": "",
-    "text": "The following coding exercise will involve loading, viewing, processing, and visualizing the dataset provided"
+    "text": "The following exercise was designed to practice and explore complex data set. In the following example, I used the package gutenbergr."
   },
   {
     "objectID": "aboutme.html",
@@ -277,6 +277,27 @@
     "href": "data-exercise/data-exercise.html#loading-and-checking-data",
     "title": "Data Exercise",
     "section": "Loading and Checking Data",
-    "text": "Loading and Checking Data"
+    "text": "Loading and Checking Data\nI first installed and loaded my packages. I used the  (https://www.tidytextmining.com/) resource to help guide me in analyzing this text. When I was stuck with some errors, I used ChatGPT to help diagnose the issue.\n\n#Loading packages\nlibrary(gutenbergr)\nlibrary(tidytext)\nlibrary(dplyr)\nlibrary(ggplot2)\n\n#Determining the Book ID for the \"Andersen's Fairy Tales\" in Project Gutenberg\ngutenberg_works(title == \"Andersen's Fairy Tales\")\n\n# A tibble: 1 × 8\n  gutenberg_id title     author gutenberg_author_id language gutenberg_bookshelf\n         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;                &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;              \n1         1597 Andersen… Ander…                2298 en       Best Books Ever Li…\n# ℹ 2 more variables: rights &lt;chr&gt;, has_text &lt;lgl&gt;\n\n#Downloading the book with the book ID procured in the previous step into the object \"andersens_text\"\nandersens_text &lt;- gutenberg_download(1597)"
+  },
+  {
+    "objectID": "data-exercise/data-exercise.html#processing-the-data",
+    "href": "data-exercise/data-exercise.html#processing-the-data",
+    "title": "Data Exercise",
+    "section": "Processing the Data",
+    "text": "Processing the Data\nThe following step is used to restructure the data sets for easier analysis.I then removed any unnecessary words. The frequency of the remaining words are then recorded.\n\n#Tokenizing the text and transforming it into a tidy data structure with the 'unnest_tokens' function from 'tidytext'. This restructures the dataset to a on-token-per-row format. \nandersen_tokens &lt;- andersens_text %&gt;%\n  unnest_tokens(word, text)\n\n#As explained the resource above, the following lines remove stop words or extremely common words. \ndata(stop_words)\ntidy_books &lt;-andersen_tokens %&gt;%\n  anti_join(stop_words)\n\n#The following lines uses the function count() to determine the frequency of each word and apply it to an object called 'word_freq'  \nword_freq &lt;- tidy_books %&gt;%\n  count(word, sort = TRUE)"
+  },
+  {
+    "objectID": "data-exercise/data-exercise.html#plotting-and-visualizing-the-data",
+    "href": "data-exercise/data-exercise.html#plotting-and-visualizing-the-data",
+    "title": "Data Exercise",
+    "section": "Plotting and Visualizing the Data",
+    "text": "Plotting and Visualizing the Data\nI created a bar graph to better visualize the frequency of each words.\n\n##I then use the package ggplot2 to visualize my word frequency\nggplot(head(word_freq, 10), aes(x = reorder(word, n), y = n)) +\n  geom_col() +\n  coord_flip() +\n  xlab(\"# of Occurence\")+\n  ylab(\"Words\")\n\n\n\n  labs(title = \"Top 10 Words in Andersen's Fairy Tales\")\n\n$title\n[1] \"Top 10 Words in Andersen's Fairy Tales\"\n\nattr(,\"class\")\n[1] \"labels\"\n\n#The tidytextmining website provided this format of graphing the plot, and I readjusted it to fit my data set. I graphed this one to see any words with greater occurance than 50. \n tidy_books %&gt;%\n    count(word, sort = TRUE) %&gt;%\n    filter(n &gt; 50) %&gt;%\n    mutate(word = reorder(word, n)) %&gt;%\n    ggplot(aes(n, word)) +\n    geom_col() +\n    xlab(\"# of Occurence\")+\n    ylab(\"Words\")+\n    labs(title = \"Most Common Words\")"
+  },
+  {
+    "objectID": "data-exercise/data-exercise.html#conclusion",
+    "href": "data-exercise/data-exercise.html#conclusion",
+    "title": "Data Exercise",
+    "section": "Conclusion",
+    "text": "Conclusion\nThe most common word in the book “Andersen’s Fairy Tale” is Gerda, which is the name of one of the characters in “The Snow Queen”, one of his tales. Of the other frequently used words, most of them were common words like ‘tree’ or ‘looked’. I imagine moving forward, if I were to continue analyzing this book, I would find a way to omit these other common words."
   }
 ]
