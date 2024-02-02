@@ -2,4 +2,12 @@
 title: "Data Exercise"
 ---
 
-Placeholder file 
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+#### This section will be utilized to explore complex data sets. 
+
+The following coding exercise will involve loading, viewing, processing, and visualizing the dataset provided
+
+## Loading and Checking Data
