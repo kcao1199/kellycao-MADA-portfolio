@@ -11,7 +11,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 The following exercise was designed to practice and explore complex data set. In the following example, I used the package `gutenbergr.`
 
 ## Loading and Checking Data
-I first installed and loaded my packages. I used the <Text Mining with R: A Tidy Approach> (https://www.tidytextmining.com/) resource to help guide me in analyzing this text. When I was stuck with some errors, I used ChatGPT to help diagnose the issue. 
+I first installed and loaded my packages. I used the [Text Mining with R: A Tidy Approach](https://www.tidytextmining.com/) resource to help guide me in analyzing this text. When I was stuck with some errors, I used ChatGPT to help diagnose the issue. 
 
 ```{r, style='background-color: lightgray;'}
 #Loading packages
