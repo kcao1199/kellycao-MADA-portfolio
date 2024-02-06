@@ -20,6 +20,8 @@ website:
             file: tidytuesday-exercise/tidytuesday-exercise.qmd
           - text: "Data Exercise"
             file: data-exercise/data-exercise.qmd
+          - text: "Data Analysis Exercise"
+            file: cdcdata-exercise.qmd
     right:
       - icon: github 
         href: https://github.com/kcao1199/kellycao-MADA-portfolio      
