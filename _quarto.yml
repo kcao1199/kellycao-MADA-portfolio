@@ -21,7 +21,7 @@ website:
           - text: "Data Exercise"
             file: data-exercise/data-exercise.qmd
           - text: "CDC-Data Exercise"
-            file: cdcdata-exercise.qmd
+            file: cdcdata-exercise/cdcdata-exercise.qmd
     right:
       - icon: github 
         href: https://github.com/kcao1199/kellycao-MADA-portfolio      
