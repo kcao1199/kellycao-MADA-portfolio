@@ -1,1 +1,175 @@
+---
+title: "CDC-Data Exercise"
+---
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
 
+The following [data sets](https://data.cdc.gov/NCHS/NCHS-Leading-Causes-of-Death-United-States/bi63-dtpu/about_data) was provided from the National Center for Health Statistics (NCHS) and was found on the CDC's data website. The data summarizes information regarding leading causes of death for United States' residents. The data was collected from death certificates in the 50 states and the District of Columbia from 1999-2017. 
+It can be found in the following link:
+
+- [CDC Link](https://data.cdc.gov/NCHS/NCHS-Leading-Causes-of-Death-United-States/bi63-dtpu/about_data)
+
+## Loading Data Set
+
+```{r, style='background-color: lightgray;'}
+#Required packages are loaded
+library(dplyr)   #for data processing/cleaning
+library(tidyr)   #for data processing / cleaning
+library(ggplot2) #for nice visualization of data
+library(here)    #for easy file referencing
+library(skimr)   #for data summary
+library(knitr)
+library(kableExtra)
+```
+
+
+The data set has 6 variables and 10,686 observations. The variables include:
+
+- Year
+- X113.Cause.Name (the Cause of Death with regards to [NCHS 113 Select Causes of Death](https://www-doh.state.nj.us/doh-shad/query/NCHS113.html))
+- Cause.Name (cause of death)
+- State
+- Deaths (number of deaths)
+- Age.adjusted.Death.Rate (Age-adjusted death rates per 100,000 population)
+
+```{r, style='background-color: lightgray;'}
+#Reading in the .csv file into the object "cause_of_death"
+cdc_data <- read.csv(here("cdcdata-exercise", "Leading_Cause_of_Death.csv"))
+
+#Summarizing 
+summary(cdc_data)
+str(cdc_data)
+```
+
+::: {.callout-note}
+The Age-adjusted death rates (per 100,000 population) are based the 2000 US standard population. The death rates for post 2010, uses the census required US standard population of 2010. 
+When reviewing age-adjusted death rates, look below for more context: 
+
+<u> **Missouri Department of Health's Definition:** </u> (Missouri Department of Health & Senior Services)
+
+Age-Adjusted Death Rates (AADR) = $\sum (ASDR \times \text{standard proportion})$
+
+
+Age-specific Death Rate (ASDR) = $\frac{\text{deaths in age group}}{\text{estimated population of that age group}} \times 100,000$.
+
+<u> **CDC's Definition** (CDC, 2022) </u>
+
+$\sum_{i=1}^{n} {r_i \times (p_i / P)}{}$
+
+$r_i = \text{rate in age group } i \text{ in the population of interest}$
+
+$p_i = \text{standard population in age group } i$
+
+$P = \sum_{i=1}^{n} \frac{p_i}{n}$
+
+$n = \text{total number of age groups over the age range of the age-adjusted rate}$
+
+
+:::
+## Processing and Cleaning Data Set
+I first renamed the column names in the data set, as they were not too clear in what they represented. I then removed one of of the column in the data set, as it became redundant and was comparable to another column. I chose the `Cause of Death` column over `Cause of Death_X113` column for simplicity sake, as that column also included other information not relevant and required cleaning. I then removed the rows from certain columns that did not bring any legitimate or viable information. I then used the `na.omit()` function to omit any rows that had any non-answered columns. As the number of observations did not change, I could deduce that there were none. I then adjusted the years column into year ranges and made them continuous for greater ease of use. 
+```{r, style='background-color: lightgray;'}
+# Renaming the columns for clarity and using str() to determine if the change of name took.
+names(cdc_data) <- c("Year", "Cause of Death_X113", "Cause of Death", "State", "Number of Deaths", "Age-Adjusted Death Rates")
+str(cdc_data)
+
+#I removed the column `Cause of Death_X113` for simplicity sake, as it seemed redundant with the next column, which did not contain the cause of death codes. 
+cdc_data <- cdc_data %>%
+  select(-`Cause of Death_X113`)
+
+#I removed any rows with columns in the "State" column that answered "United States"
+cdc_data <- cdc_data %>% 
+  filter(State != "United States")
+#I removed any rows with columns in the "Cause of Death" column that answered "All Causes"
+cdc_data <- cdc_data %>%
+  filter(`Cause of Death`!= "All causes")
+
+#I used the na.omit() function to ensure the data set did not have any data that was NA
+cdc_data <- na.omit(cdc_data)
+
+#With the column Years, I arranged them into ranges, so I may have an easier time performing any analysis later on with more distinct categorical levels
+breaks <- c(1999, 2000, 2003, 2006, 2009, 2012, 2015, 2018)
+labels <- c("1999", "2000-2002", "2003-2005", "2006-2008", "2009-2011", "2012-2014", "2015-2017")
+cdc_data$Year_Range <- cut(cdc_data$Year, breaks = breaks, labels = labels, include.lowest = TRUE)
+```
+
+Creating the distinct ranges for the years were performed with ChatGPT 3.5. After cleaning the data, I was left with 9690 observation of 6 variables.
+
+## Descriptive Analysis of Processed Data
+<u> Categorical Variables </u>
+
+Using the `summary(cdc_data$Year==)` command, I was able to discern that each year collected 572 observations. I double checked this by entering the same command in the console to ensure that each year had the same number of observations. I used the table() function to determine the number of categories in the Cause of Death column. From this I was able to determine that there was 9 possible answer choices for that column, and each cause of death had the same number of observation in this data set. I then decided to calculate the proportion each of the answers make for each categorical variable. 
+```{r, style='background-color: lightgray;'}
+#Determining the summary of each year category
+summary(cdc_data$Year==1999)
+
+#Tabulating the categorical variables to discern the frequency of the output. I applied to result of the table() function an object for each categorical variable. I then used pop.table() function to determine the proportion of each answer and printed it. I discovered the prop.table() function for ChatGPT 3.5.
+cause_of_death_table <- table(cdc_data$`Cause of Death`)
+cause_of_death_percentages <- prop.table(cause_of_death_table)*100
+print(cause_of_death_percentages)
+
+state_table <- table(cdc_data$State)
+state_percentages <- prop.table(state_table)*100
+print(state_percentages)
+
+year_table <- table(cdc_data$Year)
+year_percentages <- prop.table(year_table)*100
+print(year_percentages)
+```
+From the answers above, I was able to determine that all of the categorical variables in this data set have the same percentage for each category in a variable. 
+
+<hr>
+
+<u> Continuous Variables </u>
+
+I then plotted the continuous variables: `Number of Deaths` and `Age-Adjusted Death Rates` to determine its distribution. The summary statistics of the variables were shown in the object `summary_table`. I then printed the table with the `knitr` package and the `kableEXTRA` package. The latter package was discovered when attempting to adjust the visual of the table when using ChatGPT 3.5. 
+```{r, style='background-color: lightgray;'}
+#Plotted the continuous variables
+ggplot(cdc_data, aes(x = `Number of Deaths`)) +
+  geom_histogram(binwidth = 1000, fill = "skyblue", color = "black") +
+  ggtitle('Histogram of Number of Deaths') +
+  xlab('Number of Deaths') +
+  ylab('Frequency') +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(cdc_data, aes(x = `Age-Adjusted Death Rates`)) +
+  geom_histogram(binwidth = 10, fill = "lightgreen", color = "black") +
+  ggtitle('Histogram of Age-Adjusted Death Rates') +
+  xlab('Age-Adjusted Death Rates') +
+  ylab('Frequency') +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#I then created the objects to store the two continuous variables
+summary_variable1 <- summary(cdc_data$`Number of Deaths`)
+summary_variable2 <- summary(cdc_data$`Age-Adjusted Death Rates`)
+
+#I then created a table with the summary statistics of both variables
+summary_table <- data.frame(
+  Variable = c("Number of Deaths", "Age-Adjusted Death Rates"),
+  Min = c(summary_variable1["Min."], summary_variable2["Min."]),
+  Q1 = c(summary_variable1["1st Qu."], summary_variable2["1st Qu."]),
+  Median = c(summary_variable1["Median"], summary_variable2["Median"]),
+  Mean = c(summary_variable1["Mean"], summary_variable2["Mean"]),
+  StDev = c(sd(summary_variable1), sd(summary_variable2)),
+  Q3 = c(summary_variable1["3rd Qu."], summary_variable2["3rd Qu."]),
+  Max = c(summary_variable1["Max."], summary_variable2["Max."])
+)
+#Printing the table with the summary statistics of the two variables
+kable(summary_table, 
+      caption = "Summary statistics of Number of Deaths and Age-Adjusted Death Rates") %>%
+  kable_styling(full_width = TRUE)
+
+```
+
+## Conclusion and Discussion
+The data set that was provided by the CDC was fairly clean and did not require much cleaning or processing. When attempting to analyze the individual variables, it became apparent that the categorical variables had a more uniform distribution, with an equal number of observations per category. The continuous variables when plotted showed a more exponential distribution, with many of it's observations being in the lower end of its range. 
+
+When reviewing the statistics of the continuous variables, it become apparent how great the variation is in each variable, The column "Number of Deaths" has a mean of 3744.12621 and a high standard deviation of 28670.502. The column "Age-Adjusted Death Rates" has a mean of 60.47208 and a standard deviation of 129.967. With such a high standard deviation, it is suggested that both variables have a greater spread of data 
+
+
+## References
+
+- Missouri Department of Health and Senior Services. (n.d.). Age-adjusted rates. Retrieved from https://health.mo.gov/data/mica/CDP_MICA/AARate.html
+
+- Centers for Disease Control and Prevention. (August 12, 2022). Age adjustment. Retrieved from https://www.cdc.gov/nchs/hus/sources-definitions/age-adjustment.htm
