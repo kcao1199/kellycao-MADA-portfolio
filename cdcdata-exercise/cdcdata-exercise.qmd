@@ -13,13 +13,13 @@ It can be found in the following link:
 ## Loading Data Set
 
 ```{r, style='background-color: lightgray;'}
-#Required packages are loaded
-library(dplyr)   #for data processing/cleaning
-library(tidyr)   #for data processing / cleaning
-library(ggplot2) #for nice visualization of data
-library(here)    #for easy file referencing
-library(skimr)   #for data summary
-library(knitr)
+#Required packages are loaded. These packages are for data processing.cleaning, visualizing, file referencing, creating tables, etc.
+library(dplyr)   
+library(tidyr)   
+library(ggplot2) 
+library(here)    
+library(skimr)   
+library(knitr)  
 library(kableExtra)
 ```
 
