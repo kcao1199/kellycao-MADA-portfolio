@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -89,8 +89,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 
@@ -201,14 +200,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="loading-data-set" class="level2">
 <h2 class="anchored" data-anchor-id="loading-data-set">Loading Data Set</h2>
 <div class="cell" style="background-color: lightgray;">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Required packages are loaded</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)   <span class="co">#for data processing/cleaning</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)   <span class="co">#for data processing / cleaning</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co">#for nice visualization of data</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)    <span class="co">#for easy file referencing</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)   <span class="co">#for data summary</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Required packages are loaded. These packages are for data processing.cleaning, visualizing, file referencing, creating tables, etc.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)   </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)   </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)    </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)   </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)  </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The data set has 6 variables and 10,686 observations. The variables include:</p>
 <ul>
@@ -488,6 +488,543 @@ logical    9180     510 </code></pre>
 <li><p>Missouri Department of Health and Senior Services. (n.d.). Age-adjusted rates. Retrieved from https://health.mo.gov/data/mica/CDP_MICA/AARate.html</p></li>
 <li><p>Centers for Disease Control and Prevention. (August 12, 2022). Age adjustment. Retrieved from https://www.cdc.gov/nchs/hus/sources-definitions/age-adjustment.htm</p></li>
 </ul>
+<p><strong>This section is contributed by Malika Dhakhwa</strong></p>
+<p>The original data includes 10 causes of death. There are 19 years of data for each of the causes of death for 51 states from 1999 to 2017. I simulated the categorical variables, Year, State and Cause of Death using these parameters. Combining these, I created a data frame ‘synthetic_data’ which has 9690 observations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Generating a column of 19 years starting from 1999 to 2017. ChatGPT helped me to find out the expand.grid function.</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Year <span class="ot">&lt;-</span> <span class="dv">1999</span><span class="sc">:</span><span class="dv">2017</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Generating 51 states assuming generic state names</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>states <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"State"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">51</span>) </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Generating Cause of Death</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>causes_of_death <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Alzheimer's disease"</span>, <span class="st">"Cancer"</span>, <span class="st">"CLRD"</span>, <span class="st">"Diabetes"</span>, <span class="st">"Heart disease"</span>, </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Influenza and pneumonia"</span>, <span class="st">"Kidney disease"</span>, <span class="st">"Stroke"</span>, <span class="st">"Suicide"</span>, <span class="st">"Unintentional injuries"</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>synthetic_data <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">Year =</span> Year, <span class="at">State =</span> states, <span class="at">Cause_of_Death =</span> causes_of_death)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(synthetic_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   9690 obs. of  3 variables:
+ $ Year          : int  1999 2000 2001 2002 2003 2004 2005 2006 2007 2008 ...
+ $ State         : Factor w/ 51 levels "State 1","State 2",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ Cause_of_Death: Factor w/ 10 levels "Alzheimer's disease",..: 1 1 1 1 1 1 1 1 1 1 ...
+ - attr(*, "out.attrs")=List of 2
+  ..$ dim     : Named int [1:3] 19 51 10
+  .. ..- attr(*, "names")= chr [1:3] "Year" "State" "Cause_of_Death"
+  ..$ dimnames:List of 3
+  .. ..$ Year          : chr [1:19] "Year=1999" "Year=2000" "Year=2001" "Year=2002" ...
+  .. ..$ State         : chr [1:51] "State=State 1" "State=State 2" "State=State 3" "State=State 4" ...
+  .. ..$ Cause_of_Death: chr [1:10] "Cause_of_Death=Alzheimer's disease" "Cause_of_Death=Cancer" "Cause_of_Death=CLRD" "Cause_of_Death=Diabetes" ...</code></pre>
+</div>
+</div>
+<p>I replaced the generic state with actual state names. ChatGPT helped me with the mapping.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mapping of placeholder names to actual state names</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>state_mapping <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"Alabama"</span>, <span class="st">"Alaska"</span>, <span class="st">"Arizona"</span>, <span class="st">"Arkansas"</span>, <span class="st">"California"</span>, <span class="st">"Colorado"</span>, </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Connecticut"</span>, <span class="st">"Delaware"</span>, <span class="st">"District of Columbia"</span>, <span class="st">"Florida"</span>, <span class="st">"Georgia"</span>, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Hawaii"</span>, <span class="st">"Idaho"</span>, <span class="st">"Illinois"</span>, <span class="st">"Indiana"</span>, <span class="st">"Iowa"</span>, <span class="st">"Kansas"</span>, <span class="st">"Kentucky"</span>, </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Louisiana"</span>, <span class="st">"Maine"</span>, <span class="st">"Maryland"</span>, <span class="st">"Massachusetts"</span>, <span class="st">"Michigan"</span>, <span class="st">"Minnesota"</span>, </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Mississippi"</span>, <span class="st">"Missouri"</span>, <span class="st">"Montana"</span>, <span class="st">"Nebraska"</span>, <span class="st">"Nevada"</span>, <span class="st">"New Hampshire"</span>, </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"New Jersey"</span>, <span class="st">"New Mexico"</span>, <span class="st">"New York"</span>, <span class="st">"North Carolina"</span>, <span class="st">"North Dakota"</span>, </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Ohio"</span>, <span class="st">"Oklahoma"</span>, <span class="st">"Oregon"</span>, <span class="st">"Pennsylvania"</span>, <span class="st">"Rhode Island"</span>, <span class="st">"South Carolina"</span>, </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"South Dakota"</span>, <span class="st">"Tennessee"</span>, <span class="st">"Texas"</span>, <span class="st">"Utah"</span>, <span class="st">"Vermont"</span>, <span class="st">"Virginia"</span>, </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Washington"</span>, <span class="st">"West Virginia"</span>, <span class="st">"Wisconsin"</span>, <span class="st">"Wyoming"</span>), </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">paste</span>(<span class="st">"State"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">51</span>))</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Replacing the placeholder names in synthetic_data with actual state names using the mapping</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>synthetic_data<span class="sc">$</span>State <span class="ot">&lt;-</span> state_mapping[synthetic_data<span class="sc">$</span>State]</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for accuracy </span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(synthetic_data<span class="sc">$</span>State)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Alabama" "Alabama" "Alabama" "Alabama" "Alabama" "Alabama"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(synthetic_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   9690 obs. of  3 variables:
+ $ Year          : int  1999 2000 2001 2002 2003 2004 2005 2006 2007 2008 ...
+ $ State         : chr  "Alabama" "Alabama" "Alabama" "Alabama" ...
+ $ Cause_of_Death: Factor w/ 10 levels "Alzheimer's disease",..: 1 1 1 1 1 1 1 1 1 1 ...
+ - attr(*, "out.attrs")=List of 2
+  ..$ dim     : Named int [1:3] 19 51 10
+  .. ..- attr(*, "names")= chr [1:3] "Year" "State" "Cause_of_Death"
+  ..$ dimnames:List of 3
+  .. ..$ Year          : chr [1:19] "Year=1999" "Year=2000" "Year=2001" "Year=2002" ...
+  .. ..$ State         : chr [1:51] "State=State 1" "State=State 2" "State=State 3" "State=State 4" ...
+  .. ..$ Cause_of_Death: chr [1:10] "Cause_of_Death=Alzheimer's disease" "Cause_of_Death=Cancer" "Cause_of_Death=CLRD" "Cause_of_Death=Diabetes" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(synthetic_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Year         State                           Cause_of_Death
+ Min.   :1999   Length:9690        Alzheimer's disease    : 969  
+ 1st Qu.:2003   Class :character   Cancer                 : 969  
+ Median :2008   Mode  :character   CLRD                   : 969  
+ Mean   :2008                      Diabetes               : 969  
+ 3rd Qu.:2013                      Heart disease          : 969  
+ Max.   :2017                      Influenza and pneumonia: 969  
+                                   (Other)                :3876  </code></pre>
+</div>
+</div>
+<p>For simulating ‘No.&nbsp;of deaths’ and ‘Age-adjusted death rates’ in the synthetic data, I use the estimates of Year, state and Cause of death on the log of ‘No.&nbsp;of deaths’ and ‘Age-adjusted death rates’ obtained from the original data. To do this, I first fitted linear models using the original data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Renaming the columns of the original data temporarily for fitting the model to avoid the spaces and simplifying the syntax.</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cdc_data)[<span class="fu">names</span>(cdc_data) <span class="sc">==</span> <span class="st">"Number of Deaths"</span>] <span class="ot">&lt;-</span> <span class="st">"Number_of_Deaths"</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cdc_data)[<span class="fu">names</span>(cdc_data) <span class="sc">==</span> <span class="st">"Cause of Death"</span>] <span class="ot">&lt;-</span> <span class="st">"Cause_of_Death"</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cdc_data)[<span class="fu">names</span>(cdc_data) <span class="sc">==</span> <span class="st">"Age-Adjusted Death Rates"</span>] <span class="ot">&lt;-</span> <span class="st">"AADR"</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Fitting the linear model for log of 'Number of Deaths'</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>lm_log_Deaths <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(Number_of_Deaths) <span class="sc">~</span> Year <span class="sc">+</span> <span class="fu">factor</span>(State) <span class="sc">+</span> <span class="fu">factor</span>(Cause_of_Death), <span class="at">data =</span> cdc_data)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>lm_log_Deaths</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(Number_of_Deaths) ~ Year + factor(State) + factor(Cause_of_Death), 
+    data = cdc_data)
+
+Coefficients:
+                                  (Intercept)  
+                                   -15.499892  
+                                         Year  
+                                     0.011346  
+                          factor(State)Alaska  
+                                    -2.631253  
+                         factor(State)Arizona  
+                                     0.003643  
+                        factor(State)Arkansas  
+                                    -0.457314  
+                      factor(State)California  
+                                     1.620484  
+                        factor(State)Colorado  
+                                    -0.379651  
+                     factor(State)Connecticut  
+                                    -0.565903  
+                        factor(State)Delaware  
+                                    -1.891678  
+            factor(State)District of Columbia  
+                                    -2.497995  
+                         factor(State)Florida  
+                                     1.236063  
+                         factor(State)Georgia  
+                                     0.376874  
+                          factor(State)Hawaii  
+                                    -1.649134  
+                           factor(State)Idaho  
+                                    -1.416394  
+                        factor(State)Illinois  
+                                     0.747390  
+                         factor(State)Indiana  
+                                     0.202046  
+                            factor(State)Iowa  
+                                    -0.550949  
+                          factor(State)Kansas  
+                                    -0.609990  
+                        factor(State)Kentucky  
+                                    -0.085395  
+                       factor(State)Louisiana  
+                                    -0.109299  
+                           factor(State)Maine  
+                                    -1.293221  
+                        factor(State)Maryland  
+                                    -0.191319  
+                   factor(State)Massachusetts  
+                                     0.061227  
+                        factor(State)Michigan  
+                                     0.595212  
+                       factor(State)Minnesota  
+                                    -0.214052  
+                     factor(State)Mississippi  
+                                    -0.478931  
+                        factor(State)Missouri  
+                                     0.190847  
+                         factor(State)Montana  
+                                    -1.654428  
+                        factor(State)Nebraska  
+                                    -1.144469  
+                          factor(State)Nevada  
+                                    -0.923959  
+                   factor(State)New Hampshire  
+                                    -1.527223  
+                      factor(State)New Jersey  
+                                     0.294695  
+                      factor(State)New Mexico  
+                                    -1.063613  
+                        factor(State)New York  
+                                     0.990054  
+                  factor(State)North Carolina  
+                                     0.521378  
+                    factor(State)North Dakota  
+                                    -2.019163  
+                            factor(State)Ohio  
+                                     0.818885  
+                        factor(State)Oklahoma  
+                                    -0.248317  
+                          factor(State)Oregon  
+                                    -0.415952  
+                    factor(State)Pennsylvania  
+                                     0.947478  
+                    factor(State)Rhode Island  
+                                    -1.675424  
+                  factor(State)South Carolina  
+                                    -0.152719  
+                    factor(State)South Dakota  
+                                    -1.840267  
+                       factor(State)Tennessee  
+                                     0.238119  
+                           factor(State)Texas  
+                                     1.249413  
+                            factor(State)Utah  
+                                    -1.146016  
+                         factor(State)Vermont  
+                                    -2.247963  
+                        factor(State)Virginia  
+                                     0.221954  
+                      factor(State)Washington  
+                                     0.016514  
+                   factor(State)West Virginia  
+                                    -0.781371  
+                       factor(State)Wisconsin  
+                                     0.017620  
+                         factor(State)Wyoming  
+                                    -2.325557  
+                 factor(Cause_of_Death)Cancer  
+                                     2.017137  
+                   factor(Cause_of_Death)CLRD  
+                                     0.600338  
+               factor(Cause_of_Death)Diabetes  
+                                    -0.034050  
+          factor(Cause_of_Death)Heart disease  
+                                     2.101562  
+factor(Cause_of_Death)Influenza and pneumonia  
+                                    -0.304687  
+         factor(Cause_of_Death)Kidney disease  
+                                    -0.588815  
+                 factor(Cause_of_Death)Stroke  
+                                     0.625631  
+                factor(Cause_of_Death)Suicide  
+                                    -0.666365  
+ factor(Cause_of_Death)Unintentional injuries  
+                                     0.535392  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Fitting the linear model for 'Age-Adjusted Death Rates'</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>lm_AADR <span class="ot">&lt;-</span> <span class="fu">lm</span>(AADR <span class="sc">~</span> Year <span class="sc">+</span> <span class="fu">factor</span>(State) <span class="sc">+</span> <span class="fu">factor</span>(Cause_of_Death), <span class="at">data =</span> cdc_data)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>lm_AADR</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = AADR ~ Year + factor(State) + factor(Cause_of_Death), 
+    data = cdc_data)
+
+Coefficients:
+                                  (Intercept)  
+                                    1882.7197  
+                                         Year  
+                                      -0.9192  
+                          factor(State)Alaska  
+                                     -14.7132  
+                         factor(State)Arizona  
+                                     -16.9621  
+                        factor(State)Arkansas  
+                                      -1.0926  
+                      factor(State)California  
+                                     -17.7700  
+                        factor(State)Colorado  
+                                     -19.4279  
+                     factor(State)Connecticut  
+                                     -20.4679  
+                        factor(State)Delaware  
+                                     -11.9584  
+            factor(State)District of Columbia  
+                                      -9.8437  
+                         factor(State)Florida  
+                                     -17.4747  
+                         factor(State)Georgia  
+                                      -8.0547  
+                          factor(State)Hawaii  
+                                     -25.7053  
+                           factor(State)Idaho  
+                                     -14.9195  
+                        factor(State)Illinois  
+                                     -12.5142  
+                         factor(State)Indiana  
+                                      -6.7821  
+                            factor(State)Iowa  
+                                     -14.4537  
+                          factor(State)Kansas  
+                                     -12.7321  
+                        factor(State)Kentucky  
+                                       0.9379  
+                       factor(State)Louisiana  
+                                      -0.8732  
+                           factor(State)Maine  
+                                     -12.4874  
+                        factor(State)Maryland  
+                                     -15.1758  
+                   factor(State)Massachusetts  
+                                     -19.2879  
+                        factor(State)Michigan  
+                                      -8.9100  
+                       factor(State)Minnesota  
+                                     -22.2426  
+                     factor(State)Mississippi  
+                                       4.2426  
+                        factor(State)Missouri  
+                                      -5.8016  
+                         factor(State)Montana  
+                                     -13.5532  
+                        factor(State)Nebraska  
+                                     -16.5868  
+                          factor(State)Nevada  
+                                      -8.8389  
+                   factor(State)New Hampshire  
+                                     -15.5737  
+                      factor(State)New Jersey  
+                                     -16.7442  
+                      factor(State)New Mexico  
+                                     -14.9495  
+                        factor(State)New York  
+                                     -17.0289  
+                  factor(State)North Carolina  
+                                      -9.3574  
+                    factor(State)North Dakota  
+                                     -16.4347  
+                            factor(State)Ohio  
+                                      -7.3579  
+                        factor(State)Oklahoma  
+                                       0.9063  
+                          factor(State)Oregon  
+                                     -16.0874  
+                    factor(State)Pennsylvania  
+                                     -11.1116  
+                    factor(State)Rhode Island  
+                                     -15.7116  
+                  factor(State)South Carolina  
+                                      -6.5289  
+                    factor(State)South Dakota  
+                                     -13.9963  
+                       factor(State)Tennessee  
+                                      -1.3111  
+                           factor(State)Texas  
+                                     -11.8305  
+                            factor(State)Utah  
+                                     -20.7479  
+                         factor(State)Vermont  
+                                     -15.5589  
+                        factor(State)Virginia  
+                                     -13.6826  
+                      factor(State)Washington  
+                                     -15.7000  
+                   factor(State)West Virginia  
+                                       0.8032  
+                       factor(State)Wisconsin  
+                                     -14.9347  
+                         factor(State)Wyoming  
+                                     -11.5605  
+                 factor(Cause_of_Death)Cancer  
+                                     153.5837  
+                   factor(Cause_of_Death)CLRD  
+                                      19.6052  
+               factor(Cause_of_Death)Diabetes  
+                                      -1.6291  
+          factor(Cause_of_Death)Heart disease  
+                                     172.9024  
+factor(Cause_of_Death)Influenza and pneumonia  
+                                      -6.8265  
+         factor(Cause_of_Death)Kidney disease  
+                                     -10.9622  
+                 factor(Cause_of_Death)Stroke  
+                                      20.8678  
+                factor(Cause_of_Death)Suicide  
+                                     -11.5956  
+ factor(Cause_of_Death)Unintentional injuries  
+                                      18.4553  </code></pre>
+</div>
+</div>
+<p>I used the above coefficients to calculate the predicted log of ‘Number of Deaths’ for each observation in the synthetic data and then exponentiate predicted values to get the original Number of Deaths. I followed similar steps for the Age-adjusted Death Rate. ChatGPT helped me with finding the ‘predict’ function to do this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating the predicted values of log of deaths for the synthetic data</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>predicted_log_deaths <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm_log_Deaths, <span class="at">newdata =</span> synthetic_data, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting log of 'Number of Deaths' back to the original scale and adding the column to the synthetic data</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>synthetic_data<span class="sc">$</span>Number_of_Deaths <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">exp</span>(predicted_log_deaths))</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating the predicted values of Age-adjusted death rates in the column</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>predicted_AADR <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm_AADR, <span class="at">newdata =</span> synthetic_data, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding the predicted Age-adjusted death rates to the synthetic data</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>synthetic_data<span class="sc">$</span>Age_adjusted_Death_Rate <span class="ot">&lt;-</span> <span class="fu">round</span>(predicted_AADR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Following my collaborator, I created a table of summary statistics to compare the distributions in the original data and the synthetic data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating the objects to store the two continuous variables</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>summary_variable1 <span class="ot">&lt;-</span> <span class="fu">summary</span>(synthetic_data<span class="sc">$</span>Number_of_Deaths)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>summary_variable2 <span class="ot">&lt;-</span> <span class="fu">summary</span>(synthetic_data<span class="sc">$</span>Age_adjusted_Death_Rate)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co">#I then created a table with the summary statistics of both variables</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>summary_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variable =</span> <span class="fu">c</span>(<span class="st">"Number_of_Deaths"</span>, <span class="st">"Age_adjusted_Death_Rate"</span>),</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Min =</span> <span class="fu">c</span>(summary_variable1[<span class="st">"Min."</span>], summary_variable2[<span class="st">"Min."</span>]),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Q1 =</span> <span class="fu">c</span>(summary_variable1[<span class="st">"1st Qu."</span>], summary_variable2[<span class="st">"1st Qu."</span>]),</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Median =</span> <span class="fu">c</span>(summary_variable1[<span class="st">"Median"</span>], summary_variable2[<span class="st">"Median"</span>]),</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Mean =</span> <span class="fu">c</span>(summary_variable1[<span class="st">"Mean"</span>], summary_variable2[<span class="st">"Mean"</span>]),</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">StDev =</span> <span class="fu">c</span>(<span class="fu">sd</span>(summary_variable1), <span class="fu">sd</span>(summary_variable2)),</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Q3 =</span> <span class="fu">c</span>(summary_variable1[<span class="st">"3rd Qu."</span>], summary_variable2[<span class="st">"3rd Qu."</span>]),</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Max =</span> <span class="fu">c</span>(summary_variable1[<span class="st">"Max."</span>], summary_variable2[<span class="st">"Max."</span>])</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="co">#Printing the table with the summary statistics of the two variables</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(summary_table, </span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">"Summary statistics of Synthetic Data"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Summary statistics of Synthetic Data</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Min</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Q1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Median</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">StDev</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Q3</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Number_of_Deaths</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">538</td>
+<td style="text-align: right;">1397</td>
+<td style="text-align: right;">3646.45573</td>
+<td style="text-align: right;">26508.08390</td>
+<td style="text-align: right;">3349.75</td>
+<td style="text-align: right;">66629</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Age_adjusted_Death_Rate</td>
+<td style="text-align: right;">-9</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">60.47245</td>
+<td style="text-align: right;">81.77695</td>
+<td style="text-align: right;">53.00</td>
+<td style="text-align: right;">222</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<p>The distribution of Number of Deaths and Age-adjusted Death Rates in the synthetic data are closely aligned with the original CDC data with the exception of the minimum values. The Age-adjusted Death Rates resulted a negative number (-9) for the minimum which is not meaningful. Upon a detailed review, I found that 0.59% (57) of the total observations have negative values for the Age-adjusted Death Rate, highlighting a need for correction to ensure the meaningfulness of these observations. Several strategies, including imputation and treating these as missing values, offer viable solutions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Checking counts of negative values</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>synthetic_data<span class="sc">$</span>Age_adjusted_Death_Rate[synthetic_data<span class="sc">$</span>Age_adjusted_Death_Rate <span class="sc">&lt;</span> <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] -1 -2 -3 -4 -1 -2 -1 -2 -3 -1 -2 -2 -3 -4 -5 -6 -7 -8 -1 -2 -1 -2 -3 -4 -5
+[26] -1 -2 -3 -1 -1 -1 -2 -1 -2 -2 -3 -1 -2 -3 -4 -5 -6 -7 -8 -9 -1 -2 -1 -1 -2
+[51] -3 -4 -5 -1 -2 -3 -4</code></pre>
+</div>
+</div>
+<p>The histogram of the ‘Number of Deaths’ on the synthetic data resembles with that of the original data.The Age-adjusted Death Rates have lesser variability in the synthetic data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plotted the continuous variables</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(synthetic_data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">Number_of_Deaths</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1000</span>, <span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Histogram of Number of Deaths  using Synthetic Data'</span>) <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Number of Deaths'</span>) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Frequency'</span>) <span class="sc">+</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cdcdata-exercise_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(synthetic_data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">Age_adjusted_Death_Rate</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">fill =</span> <span class="st">"lightgreen"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Histogram of Age-Adjusted Death Rates  from Synthetic Data'</span>) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'Age-Adjusted Death Rates'</span>) <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Frequency'</span>) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cdcdata-exercise_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Following my collaborator’s work, I summarized and tabulated the categorical variables to check frequency. As expected, the results are similar to the original data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Determining the summary of each year category</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(synthetic_data<span class="sc">$</span>Year<span class="sc">==</span><span class="dv">1999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Mode   FALSE    TRUE 
+logical    9180     510 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tabulating the categorical variables for frequency of the output following Kelly's method.</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>cause_of_death_table <span class="ot">&lt;-</span> <span class="fu">table</span>(synthetic_data<span class="sc">$</span>Cause_of_Death )</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>cause_of_death_percentages <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(cause_of_death_table)<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cause_of_death_percentages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Alzheimer's disease                  Cancer                    CLRD 
+                     10                      10                      10 
+               Diabetes           Heart disease Influenza and pneumonia 
+                     10                      10                      10 
+         Kidney disease                  Stroke                 Suicide 
+                     10                      10                      10 
+ Unintentional injuries 
+                     10 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>state_table <span class="ot">&lt;-</span> <span class="fu">table</span>(synthetic_data<span class="sc">$</span>State)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>state_percentages <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(state_table)<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(state_percentages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+             Alabama               Alaska              Arizona 
+            1.960784             1.960784             1.960784 
+            Arkansas           California             Colorado 
+            1.960784             1.960784             1.960784 
+         Connecticut             Delaware District of Columbia 
+            1.960784             1.960784             1.960784 
+             Florida              Georgia               Hawaii 
+            1.960784             1.960784             1.960784 
+               Idaho             Illinois              Indiana 
+            1.960784             1.960784             1.960784 
+                Iowa               Kansas             Kentucky 
+            1.960784             1.960784             1.960784 
+           Louisiana                Maine             Maryland 
+            1.960784             1.960784             1.960784 
+       Massachusetts             Michigan            Minnesota 
+            1.960784             1.960784             1.960784 
+         Mississippi             Missouri              Montana 
+            1.960784             1.960784             1.960784 
+            Nebraska               Nevada        New Hampshire 
+            1.960784             1.960784             1.960784 
+          New Jersey           New Mexico             New York 
+            1.960784             1.960784             1.960784 
+      North Carolina         North Dakota                 Ohio 
+            1.960784             1.960784             1.960784 
+            Oklahoma               Oregon         Pennsylvania 
+            1.960784             1.960784             1.960784 
+        Rhode Island       South Carolina         South Dakota 
+            1.960784             1.960784             1.960784 
+           Tennessee                Texas                 Utah 
+            1.960784             1.960784             1.960784 
+             Vermont             Virginia           Washington 
+            1.960784             1.960784             1.960784 
+       West Virginia            Wisconsin              Wyoming 
+            1.960784             1.960784             1.960784 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>year_table <span class="ot">&lt;-</span> <span class="fu">table</span>(synthetic_data<span class="sc">$</span>Year)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>year_percentages <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(year_table)<span class="sc">*</span><span class="dv">100</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(year_percentages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    1999     2000     2001     2002     2003     2004     2005     2006 
+5.263158 5.263158 5.263158 5.263158 5.263158 5.263158 5.263158 5.263158 
+    2007     2008     2009     2010     2011     2012     2013     2014 
+5.263158 5.263158 5.263158 5.263158 5.263158 5.263158 5.263158 5.263158 
+    2015     2016     2017 
+5.263158 5.263158 5.263158 </code></pre>
+</div>
+</div>
 
 
 </section>

@@ -21,6 +21,7 @@ library(here)
 library(skimr)   
 library(knitr)  
 library(kableExtra)
+library(lme4)
 ```
 
 
@@ -173,3 +174,165 @@ When reviewing the statistics of the continuous variables, it become apparent ho
 - Missouri Department of Health and Senior Services. (n.d.). Age-adjusted rates. Retrieved from https://health.mo.gov/data/mica/CDP_MICA/AARate.html
 
 - Centers for Disease Control and Prevention. (August 12, 2022). Age adjustment. Retrieved from https://www.cdc.gov/nchs/hus/sources-definitions/age-adjustment.htm
+
+**This section is contributed by Malika Dhakhwa**
+
+The original data includes 10 causes of death. There are 19 years of data for each of the causes of death for 51 states from 1999 to 2017. I simulated the categorical variables, Year, State and Cause of Death using these parameters. Combining these, I created a data frame  'synthetic_data' which has 9690 observations.
+
+```{r}
+#Generating a column of 19 years starting from 1999 to 2017. ChatGPT helped me to find out the expand.grid function.
+Year <- 1999:2017
+#Generating 51 states assuming generic state names
+states <- paste("State", 1:51) 
+#Generating Cause of Death
+causes_of_death <- c("Alzheimer's disease", "Cancer", "CLRD", "Diabetes", "Heart disease", 
+                     "Influenza and pneumonia", "Kidney disease", "Stroke", "Suicide", "Unintentional injuries")
+synthetic_data <- expand.grid(Year = Year, State = states, Cause_of_Death = causes_of_death)
+
+str(synthetic_data)
+```
+I replaced the generic state  with actual state names. ChatGPT helped me with the mapping.
+
+```{r}
+# Mapping of placeholder names to actual state names
+state_mapping <- setNames(c("Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", 
+                            "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", 
+                            "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", 
+                            "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", 
+                            "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", 
+                            "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", 
+                            "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", 
+                            "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", 
+                            "Washington", "West Virginia", "Wisconsin", "Wyoming"), 
+                  paste("State", 1:51))
+
+# Replacing the placeholder names in synthetic_data with actual state names using the mapping
+synthetic_data$State <- state_mapping[synthetic_data$State]
+
+# Checking for accuracy 
+head(synthetic_data$State)
+str(synthetic_data)
+summary(synthetic_data)
+
+```
+
+
+
+For simulating 'No. of deaths' and 'Age-adjusted death rates' in the synthetic data, I use the estimates of Year, state and Cause of death on the log of 'No. of deaths' and 'Age-adjusted death rates' obtained from the original data. To do this, I first fitted linear models using the original data.
+
+```{r}
+#Renaming the columns of the original data temporarily for fitting the model to avoid the spaces and simplifying the syntax.
+names(cdc_data)[names(cdc_data) == "Number of Deaths"] <- "Number_of_Deaths"
+names(cdc_data)[names(cdc_data) == "Cause of Death"] <- "Cause_of_Death"
+names(cdc_data)[names(cdc_data) == "Age-Adjusted Death Rates"] <- "AADR"
+
+#Fitting the linear model for log of 'Number of Deaths'
+
+lm_log_Deaths <- lm(log(Number_of_Deaths) ~ Year + factor(State) + factor(Cause_of_Death), data = cdc_data)
+lm_log_Deaths
+
+#Fitting the linear model for 'Age-Adjusted Death Rates'
+lm_AADR <- lm(AADR ~ Year + factor(State) + factor(Cause_of_Death), data = cdc_data)
+lm_AADR
+
+```
+I used the above coefficients to calculate the predicted log of 'Number of Deaths' for each observation in the synthetic data and then exponentiate predicted values to get the original Number of Deaths. I followed similar steps for the Age-adjusted Death Rate. ChatGPT helped me with finding the 'predict' function to do this. 
+
+```{r}
+
+# Calculating the predicted values of log of deaths for the synthetic data
+predicted_log_deaths <- predict(lm_log_Deaths, newdata = synthetic_data, type = "response")
+
+# Converting log of 'Number of Deaths' back to the original scale and adding the column to the synthetic data
+synthetic_data$Number_of_Deaths <- round(exp(predicted_log_deaths))
+
+# Calculating the predicted values of Age-adjusted death rates in the column
+predicted_AADR <- predict(lm_AADR, newdata = synthetic_data, type = "response")
+
+# Adding the predicted Age-adjusted death rates to the synthetic data
+synthetic_data$Age_adjusted_Death_Rate <- round(predicted_AADR)
+
+```
+
+Following my collaborator, I created a table of summary statistics to compare the distributions in the original data and the synthetic data.
+
+```{r}
+#Creating the objects to store the two continuous variables
+summary_variable1 <- summary(synthetic_data$Number_of_Deaths)
+summary_variable2 <- summary(synthetic_data$Age_adjusted_Death_Rate)
+
+#I then created a table with the summary statistics of both variables
+summary_table <- data.frame(
+  Variable = c("Number_of_Deaths", "Age_adjusted_Death_Rate"),
+  Min = c(summary_variable1["Min."], summary_variable2["Min."]),
+  Q1 = c(summary_variable1["1st Qu."], summary_variable2["1st Qu."]),
+  Median = c(summary_variable1["Median"], summary_variable2["Median"]),
+  Mean = c(summary_variable1["Mean"], summary_variable2["Mean"]),
+  StDev = c(sd(summary_variable1), sd(summary_variable2)),
+  Q3 = c(summary_variable1["3rd Qu."], summary_variable2["3rd Qu."]),
+  Max = c(summary_variable1["Max."], summary_variable2["Max."])
+)
+
+#Printing the table with the summary statistics of the two variables
+kable(summary_table, 
+      caption = "Summary statistics of Synthetic Data") %>%
+  kable_styling(full_width = TRUE)
+
+
+
+```
+
+The distribution of Number of Deaths and Age-adjusted Death Rates in the synthetic data are closely aligned with the original CDC data with the exception of the minimum values. The Age-adjusted Death Rates resulted a negative number (-9) for the minimum which is not meaningful. Upon a detailed review, I found that 0.59% (57) of the total observations have negative values for the Age-adjusted Death Rate, highlighting a need for correction to ensure the meaningfulness of these observations. Several strategies, including imputation and treating these as missing values, offer viable solutions. 
+
+```{r}
+#Checking counts of negative values
+
+synthetic_data$Age_adjusted_Death_Rate[synthetic_data$Age_adjusted_Death_Rate < 0]
+```
+
+The histogram of the 'Number of Deaths' on the synthetic data resembles with that of the original data.The Age-adjusted Death Rates have lesser variability in the synthetic data.  
+
+```{r}
+
+#Plotted the continuous variables
+ggplot(synthetic_data, aes(x = `Number_of_Deaths`)) +
+  geom_histogram(binwidth = 1000, fill = "skyblue", color = "black") +
+  ggtitle('Histogram of Number of Deaths  using Synthetic Data') +
+  xlab('Number of Deaths') +
+  ylab('Frequency') +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(synthetic_data, aes(x = `Age_adjusted_Death_Rate`)) +
+  geom_histogram(binwidth = 10, fill = "lightgreen", color = "black") +
+  ggtitle('Histogram of Age-Adjusted Death Rates  from Synthetic Data') +
+  xlab('Age-Adjusted Death Rates') +
+  ylab('Frequency') +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+
+
+Following my collaborator's work, I summarized and tabulated the categorical variables to check frequency. As expected, the results are similar to the original data.
+
+```{r}
+#Determining the summary of each year category
+summary(synthetic_data$Year==1999)
+
+#Tabulating the categorical variables for frequency of the output following Kelly's method.
+cause_of_death_table <- table(synthetic_data$Cause_of_Death )
+cause_of_death_percentages <- prop.table(cause_of_death_table)*100
+print(cause_of_death_percentages)
+
+state_table <- table(synthetic_data$State)
+state_percentages <- prop.table(state_table)*100
+print(state_percentages)
+
+year_table <- table(synthetic_data$Year)
+year_percentages <- prop.table(year_table)*100
+print(year_percentages)
+```
+
+
+
+
