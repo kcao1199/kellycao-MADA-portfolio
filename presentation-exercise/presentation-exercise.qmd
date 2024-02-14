@@ -180,7 +180,7 @@ ggsave("my_plot.png", plot = p5)
 
 ## Table
 
-The following show a table of the data after it's been processed, cleaned, and calculated in the above sections. These values were used in the plots. 
+The following show a table of the data after it's been processed, cleaned, and calculated in the above sections using ChatGPT. The prompts include copying the data cleaning process and asking ChatGPT to make a table with flextable package. Some variations were made afterwards. These values were used in the plots. 
 ```{r}
 library(flextable)
 
