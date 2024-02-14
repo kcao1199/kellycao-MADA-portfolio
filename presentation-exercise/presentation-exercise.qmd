@@ -1,5 +1,188 @@
 ---
 title: "Presentation Exercise"
 ---
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+The following exercise involve recreating open sourced visuals found in the following links:
 
-Placeholder file for the future data/results presentation exercise.
+- [Article Link](https://fivethirtyeight.com/features/some-people-are-too-superstitious-to-have-a-baby-on-friday-the-13th/)
+
+- [Data Link](https://github.com/fivethirtyeight/data/tree/master/births)
+
+
+## Muse
+
+The following image is the reference I will be attempting to recreate. The graphic describes the effect of Friday the 13th on birth rates across the US from 1194-2014. The data set was found in the link above but also provided by the Centers for Disease Control and Prevention's National Center for Health Statistics.
+
+![](/presentation-exercise/1994_2014_image.jpg)
+
+
+## Loading Data
+```{r}
+#Loading the required packages 
+library(here)
+library(ggplot2)
+library(dplyr)
+library(stringr)
+
+#Reading the .csv files into the following objects 
+US_Birth_1994_2014<-read.csv(here("presentation-exercise", "CDC_NHS.csv"))
+US_Birth_2000_2014<-read.csv(here("presentation-exercise", "SSA.csv"))
+
+#Confirming the data is read
+summary(US_Birth_1994_2014)
+str(US_Birth_1994_2014)
+summary(US_Birth_2000_2014)
+str(US_Birth_2000_2014)
+
+#Determining the Column names 
+colnames(US_Birth_1994_2014)
+colnames(US_Birth_2000_2014)
+```
+
+## Cleaning Data
+
+Cleaning the data to match the data set identified in the plots shown above. I initially attempted to clean the data without AI assistance. From the reference plot, I was able to tell which variables were being filtered and used; however, I ended up being stuck at the determining the difference. 
+
+I initially had each of the averages calculated with the summary() function, but it resulted in a single value output rather than the vector I required. I used ChatGPT 3.5 for the remainder of the cleaning process. I submitted my code and asked "How do I get the difference of the averages and get a vector?" The result added the group_by() function.
+```{r}
+sixth_and_twentieth_day <- US_Birth_1994_2014 %>%
+  filter(date_of_month == "6" | date_of_month == "20")
+
+average_births_6th_20th <- sixth_and_twentieth_day %>%
+  group_by(day_of_week) %>%
+  summarize(average_births_6th_20th = mean(births))
+
+thirteeth_day <- US_Birth_1994_2014 %>%
+  filter(date_of_month=="13")
+
+# Calculate the share of births on the 13th of each month
+births_13th <- thirteeth_day %>%
+  group_by(day_of_week) %>%
+  summarise(births = mean(births))
+
+# I then calculated the difference between the share of births on the 13th day and the average births on the 6th and 20th days for each day of the week. The following lines used ChatGPT 3.5. I initially intended to use mutate() function and the pipe function to run it in one string, but ChatGPT recommended the following. 
+
+# Calculate the difference in share of births on the 13th from the average of births on the 6th and 20th
+diff_share_13th <- births_13th$births - average_births_6th_20th$average_births_6th_20th
+# Creating the data frame with all of the variables and labels for plotting
+plot_data <- data.frame(day_of_week = factor(1:7, labels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))) 
+```
+
+## Visualization + Prompts
+I initially plotted p1 to assist me in visualizing and helping with the cleaning process. After the 2nd attempt with the cleaned data, I used ChatGPT for certain factors listed below.
+
+The link I used to adjust the x-axis: 
+
+- [Link](https://www.tutorialspoint.com/how-to-x-axis-labels-to-the-top-of-the-plot-using-ggplot2-in-r)
+
+The link I used to color match for ggplot: 
+- [Link](https://sape.inf.usi.ch/quick-reference/ggplot2/colour)
+
+```{r}
+# My first attempt at creating the bar graph while cleaning the data. I knew the day_of_week was on the x-axis and the the y-axis had some numeric value representing some average in birth number. Plotting this allowed me to see what I was missing. 
+p1 <- ggplot(average_births_6th_20th, aes(x = day_of_week, y = average_births_6th_20th)) +
+  geom_bar(stat = "identity", fill = "hotpink") +
+  labs(title = "The Friday the 13th Effect")
+
+plot(p1)
+
+
+# My second attempt with the newly created Difference object. I can tell I am getting closer, but I want to change the y-axis scale to reflect ppt. I also want to ensure that the full subtitle can be seen, and that the Friday bar is highlighted. 
+p2 <- ggplot(plot_data, aes(x = day_of_week, y = diff_share_13th)) +
+  geom_bar(stat = "Identity", fill = "hotpink") +
+  labs(title = "The Friday the 13th Effect",
+       subtitle = "Difference in the share of U.S. births on the 13th of each month from the average of births on the 6th and the 20th, 1994-2014",
+       x ="Days of the Week",
+       y = "Average Birth Difference"
+  ) 
+
+plot(p2)
+
+
+# My third attempt. Using ChatGPT, I adjusted the y-axis and changed the title and subtitle format.This was performed by asking how I can format the titles as if it can be wrapped. I also asked it to change the plot so that the y-axis is scaled by percentage point (ppt)
+
+# Wrap the subtitle text to fit within the plot area
+wrapped_subtitle <- str_wrap("Difference in the share of U.S. births on the 13th of each month from the average of births on the 6th and the 20th, 1994-2014", width = 75)
+
+p3 <- ggplot(plot_data, aes(x = day_of_week, y = diff_share_13th)) +
+  geom_bar(stat = "Identity", fill = "hotpink") +
+  labs(title = "The Friday the 13th Effect",
+       subtitle = wrapped_subtitle,
+       x ="Days of the Week",
+       y = "Average Birth Difference"
+  ) +
+  theme(plot.title = element_text(hjust = 0, size= 20, face= "bold"), plot.subtitle = element_text(size = 15))
+
+# Adjust the y-axis scale to display in ppt
+p3 + scale_y_continuous(labels = function(x) paste0(x /100))
+
+# My fourth attempt. 
+
+# Add column in data frame called "alpha" to reflect alpha value for transparency
+plot_data$alpha <- ifelse(plot_data$day_of_week == "Fri", 1, 0.25)  # Set alpha to 1 for Friday, 0.5 for others
+
+# Plot with ggplot. I attempted to use ChatGPT to adjust the x-axis labels but was unable to do so. I found the answer in another website, I mentioned above. I needed to flip the x-axis labels to the top and change the color of the bars. I also used ChatGPT to make the other columns more transparent. This is shown in the alpha column.Alpha value is included for transparency. the axis scales are adjusted, and the background is changed so the grid and plot background matches. The color matching is performed by eye with the link shown above as reference. 
+
+#Reintroduced wrapped_subtitle with different width. Moving the xlabels to the top messed with the format a bit
+wrapped_subtitle <- str_wrap("Difference in the share of U.S. births on the 13th of each month from the average of births on the 6th and the 20th, 1994-2014", width = 65)
+
+#Plot with ggplot
+p4 <- ggplot(plot_data, aes(x = day_of_week, y = diff_share_13th, fill = "color")) +
+  geom_bar(stat = "identity", alpha = plot_data$alpha) +
+  scale_fill_manual(values = c("color" = "magenta2"), guide = FALSE) +  
+  labs(title = "The Friday the 13th Effect",
+       subtitle = wrapped_subtitle,
+       x = "",
+       y = "") +
+  theme(plot.title = element_text(hjust = 0, size = 20, face = "bold"), 
+        plot.subtitle = element_text(hjust = 0, size = 15), 
+        panel.background = element_rect(fill = "grey91"),
+        plot.background = element_rect(fill = "grey91"))+
+  scale_y_continuous(labels = function(x) ifelse(x == 0, "0 ppt", paste0(x / 100))) + #I also included the "O ppt" to replace the value 0 on the plot to match the reference
+  scale_x_discrete(position = "top") 
+
+#View Plot
+plot(p4)
+
+
+# Attempt 5. Added the lines and caption to the plot. Used chatgpt by asking how to include lines. Discovered the geom-segment() and annotate() function.
+
+p5 <- ggplot(plot_data, aes(x = day_of_week, y = diff_share_13th, fill = "color")) +
+  geom_bar(stat = "identity", alpha = plot_data$alpha) +
+  scale_fill_manual(values = c("color" = "magenta2"), guide = FALSE) +  
+  labs(title = "The Friday the 13th Effect",
+       subtitle = wrapped_subtitle,
+       x = "",
+       y = "",
+       caption = "V FIVETHIRTYEIGHT                                                                       SOURCES: CDC/NCHS; SOCIAL SECURITY ADMINISTRATION")+
+  theme(plot.title = element_text(hjust = 0, size = 20, face = "bold"), 
+        plot.subtitle = element_text(hjust = 0, size = 15), 
+        panel.background = element_rect(fill = "grey91"),
+        plot.background = element_rect(fill = "grey91")) +
+  scale_y_continuous(labels = function(x) ifelse(x == 0, "0 ppt", paste0(x / 100))) + 
+  scale_x_discrete(position = "top") +
+  annotate("segment", x = Inf, xend = -Inf, y = Inf, yend = Inf, color = "black")+
+  geom_segment(aes(x = -Inf, xend = Inf, y = -Inf, yend = -Inf), color = "black")+
+  annotate("text", x = -Inf, y = -Inf, hjust = 0, vjust = 0, 
+           label = "Includes Holidays", 
+           size = 4)
+#View Plot
+plot(p5)
+
+#I'm satisfied with the plot, and proceeds to save it
+ggsave("my_plot.png", plot = p5)
+```
+
+
+## Conclusion
+
+The final Results are shown below. The first image is the reference and second image is the recreated plot.
+
+![](/presentation-exercise/1994_2014_image.jpg)
+
+vs 
+
+![](/presentation-exercise/my_plot.png)
+
