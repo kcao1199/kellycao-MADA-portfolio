@@ -178,7 +178,7 @@ ggsave("my_plot.png", plot = p5)
 
 ## Conclusion
 
-The final Results are shown below. The first image is the reference and second image is the recreated plot.
+The final Results are shown below. The first image is the reference and second image is the recreated plot. There is a slight difference in results, as I was unable to exclude the holidays data which was performed for the reference.
 
 ![](/presentation-exercise/1994_2014_image.jpg)
 

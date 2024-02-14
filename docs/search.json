@@ -403,7 +403,7 @@
     "href": "presentation-exercise/presentation-exercise.html#conclusion",
     "title": "Presentation Exercise",
     "section": "Conclusion",
-    "text": "Conclusion\nThe final Results are shown below. The first image is the reference and second image is the recreated plot.\n\nvs"
+    "text": "Conclusion\nThe final Results are shown below. The first image is the reference and second image is the recreated plot. There is a slight difference in results, as I was unable to exclude the holidays data which was performed for the reference.\n\nvs"
   },
   {
     "objectID": "presentation-exercise/presentation-exercise.html#cleaning-data",
