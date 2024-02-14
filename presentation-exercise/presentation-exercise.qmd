@@ -28,17 +28,16 @@ library(stringr)
 
 #Reading the .csv files into the following objects 
 US_Birth_1994_2014<-read.csv(here("presentation-exercise", "CDC_NHS.csv"))
-US_Birth_2000_2014<-read.csv(here("presentation-exercise", "SSA.csv"))
+
 
 #Confirming the data is read
 summary(US_Birth_1994_2014)
 str(US_Birth_1994_2014)
-summary(US_Birth_2000_2014)
-str(US_Birth_2000_2014)
+
 
 #Determining the Column names 
 colnames(US_Birth_1994_2014)
-colnames(US_Birth_2000_2014)
+
 ```
 
 ## Cleaning Data
@@ -67,7 +66,11 @@ births_13th <- thirteeth_day %>%
 # Calculate the difference in share of births on the 13th from the average of births on the 6th and 20th
 diff_share_13th <- births_13th$births - average_births_6th_20th$average_births_6th_20th
 # Creating the data frame with all of the variables and labels for plotting
-plot_data <- data.frame(day_of_week = factor(1:7, labels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))) 
+plot_data <- data.frame(
+  day_of_week = factor(1:7, labels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")),
+  diff_share_13th = diff_share_13th
+)
+
 ```
 
 ## Visualization + Prompts
@@ -173,6 +176,63 @@ plot(p5)
 
 #I'm satisfied with the plot, and proceeds to save it
 ggsave("my_plot.png", plot = p5)
+```
+
+## Table
+
+The following show a table of the data after it's been processed, cleaned, and calculated in the above sections. These values were used in the plots. 
+```{r}
+library(flextable)
+
+# Suppose you want to remove the 'diff_share_13th' variable from the plot_data data frame
+plot_data <- plot_data[, !(names(plot_data) %in% "alpha")]
+
+# Suppose you want to change the column names of plot_data to "Day" and "Difference"
+names(plot_data) <- c("Day of the Week", "Difference in Birth Numbers")
+
+# Create the flextable object
+flex_table <- flextable(plot_data)
+
+# Add some styling if needed
+flex_table <- flex_table %>%
+  align(align = "center", part = "all") %>%
+  set_table_properties(width = .6)
+
+# Print the table
+flex_table
+
+```
+
+
+The above table was created from the following data set shown below in the tables. These tables were created by selecting the columns in the data set that had `date_of_month` = "13", "6", and "20". The data was then summarized individually in 13th and together in 6th and 20th by the `day_of_week` variable and the mean of the birth numbers. This was all performed in the Data Cleaning section.
+```{r}
+# Suppose you want to change the column names of plot_data to "Day" and "Difference"
+names(average_births_6th_20th) <- c("Day of the Week", "Difference in Birth Numbers")
+
+# Create the flextable object
+table1 <- flextable(average_births_6th_20th)
+
+# Add some styling if needed
+table1 <- table1 %>%
+  align(align = "center", part = "all") %>%
+  set_table_properties(width = .6)
+
+# Print the table
+table1
+
+# Suppose you want to change the column names of plot_data to "Day" and "Difference"
+names(births_13th) <- c("Day of the Week", "Difference in Birth Numbers")
+
+# Create the flextable object
+table2 <- flextable(births_13th)
+
+# Add some styling if needed
+table2 <- table2 %>%
+  align(align = "center", part = "all") %>%
+  set_table_properties(width = .6)
+
+# Print the table
+table2
 ```
 
 
