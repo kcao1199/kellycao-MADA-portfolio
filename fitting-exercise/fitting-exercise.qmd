@@ -1,1 +1,52 @@
+---
+title: "Fitting Exercise"
+---
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+The following exercise uses `tidymodel` framework to practice model fitting on data provied from:
+
+[Link](https://github.com/metrumresearchgroup/BayesPBPK-tutorial)
+
+```{r, include=FALSE, cache=FALSE}
+library(here)
+library(knitr)
+read_chunk(here("./fitting-exercise/fittingexercise.R"))
+```
+## Loading Data
+```{r, packages, message = FALSE, warning = FALSE}
+```
+
+```{r, loaddata}
+```
+
+## Data Processing and Exploration
+
+The data was cleaned and filtered. I adjusted the column type of the DOSE variable to a factor for clarity and removed entries where OCC is equal to 2. Additionally, I filtered out observations with TIME equal to 0.
+
+Data visualization and exploration are essential for understanding the underlying structure and patterns within a dataset. I examined the frequency distribution of variables, allowing me to gain insights into their central tendencies, spread, and potential outliers. These visualizations help identify relationships between variables, detect anomalies, and assess the quality of the data, ultimately informing subsequent analyses and modeling decisions.
+```{r, Cleaning}
+```
+
+## EDA Revisited
+
+I summarized the DV variable, created summary statistics, and visualized the distribution of various variables using histograms and bar plots.
+
+Without a codebook, many of the graphs produce remain unclear on what type of information it is presenting. However, we can discern from the sex plot, there is an overwhelming response from one race over the other. As for the scatterplots, we can tell there's a slight negative relationship between the numeric predictors and `Y`. The higher the dosage, the greater the Y value. As ther was no codebook, we're unable to clearly determine what the summation of DV reflects, but we can assume it is some observed value that's related to the dosage of a product.
+```{r, DataExploration}
+```
+
+Scatterplots and boxplots were created to visualize relationships between variables and explore distributions.
+```{r, Visual}
+```
+
+## Model Fitting
+
+I built linear regression models using tidymodels with DOSE as the main predictor and with all predictors. I also fit logistic regression models to predict SEX using DOSE as the main predictor and using all predictors.
+
+RMSD and R-squared Calculation: I manually calculated RMSD and R-squared values for the linear regression models using tidymodels. I evaluated the performance of the logistic regression models by computing accuracy and ROC-AUC.
+
+```{r, Model}
+```
 
