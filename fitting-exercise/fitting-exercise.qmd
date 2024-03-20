@@ -1,9 +1,12 @@
 ---
 title: "Fitting Exercise"
 ---
-```{r setup, include=FALSE} 
+
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
+
+# Module 8: Module Fitting
 
 The following exercise uses `tidymodel` framework to practice model fitting on data provied from:
 
@@ -14,7 +17,9 @@ library(here)
 library(knitr)
 read_chunk(here("./fitting-exercise/fittingexercise.R"))
 ```
+
 ## Loading Data
+
 ```{r, packages, message = FALSE, warning = FALSE}
 ```
 
@@ -26,6 +31,7 @@ read_chunk(here("./fitting-exercise/fittingexercise.R"))
 The data was cleaned and filtered. I adjusted the column type of the DOSE variable to a factor for clarity and removed entries where OCC is equal to 2. Additionally, I filtered out observations with TIME equal to 0.
 
 Data visualization and exploration are essential for understanding the underlying structure and patterns within a dataset. I examined the frequency distribution of variables, allowing me to gain insights into their central tendencies, spread, and potential outliers. These visualizations help identify relationships between variables, detect anomalies, and assess the quality of the data, ultimately informing subsequent analyses and modeling decisions.
+
 ```{r, Cleaning}
 ```
 
@@ -34,10 +40,12 @@ Data visualization and exploration are essential for understanding the underlyin
 I summarized the DV variable, created summary statistics, and visualized the distribution of various variables using histograms and bar plots.
 
 Without a codebook, many of the graphs produce remain unclear on what type of information it is presenting. However, we can discern from the sex plot, there is an overwhelming response from one race over the other. As for the scatterplots, we can tell there's a slight negative relationship between the numeric predictors and `Y`. The higher the dosage, the greater the Y value. As ther was no codebook, we're unable to clearly determine what the summation of DV reflects, but we can assume it is some observed value that's related to the dosage of a product.
+
 ```{r, DataExploration}
 ```
 
 Scatterplots and boxplots were created to visualize relationships between variables and explore distributions.
+
 ```{r, Visual}
 ```
 
@@ -50,3 +58,82 @@ RMSD and R-squared Calculation: I manually calculated RMSD and R-squared values 
 ```{r, Model}
 ```
 
+<hr>
+
+# Module 10: Model Improvement
+
+```{r, include=FALSE, cache=FALSE}
+library(here)
+library(knitr)
+read_chunk(here("./fitting-exercise/fittingexercise2.R"))
+```
+
+The following exercise is performed to practice model fitting and resampling.
+
+```{r, packages}
+```
+
+```{r, randomseed}
+```
+
+## Data Preparation
+
+I previously calculated the RMSE by hand, but I wanted to attempt to calculate it through the `metrics()` function from the `tidymodels`. The following data preparation is written with this as a reference:
+
+[Data Splitting Reference](https://www.tidymodels.org/start/recipes/)
+
+The data provided from the exercise above is splitted with 75% of it dedicated to the training data and the remaining 25% as testing data.
+
+```{r, dataprep}
+```
+
+
+## Model Fitting 
+The data sets below is fitted to a linear regression model. The linear regression mode specification is initially declared and applied to the data. The first model(lm1) uses `DOSE` as a predictor and `Y` as the continuous outcome of interest. The second model (lm2) fits `Y`, the continuous outcome of interest to all predictors. Both models are fitted to the training data. 
+
+I then fitted a null model to the training data as well, for future comparison and analysis. 
+
+```{r, modelfitting}
+```
+
+
+## Model Performance
+To determine the performance of the models above, I calculate the RMSE and R-squared value for each models. 
+
+I performed the predictions on each of the models. The predicted data is added to the original observed values for ease of comparison. From that, `metrics()` is used to calculate the performance metrics of the model predictions. 
+
+From that, we were able to receive the RMSE and R-squared values. 
+
+I used the following resource as references for the code below:
+
+[Parsnip Reference](https://parsnip.tidymodels.org/reference/null_model.html) 
+
+[Metric Reference](https://yardstick.tidymodels.org/articles/metric-types.html)
+
+```{r, modelperformance}
+```
+
+From the `metrics()` function, we were able to see that the RMSE values were 703, 619, and 948 for model 1, model 2, and the null model respectively. All of these values were within expectation. 
+
+## Model Performance 2
+
+To further assess the models, I re-sampled the data with a 10-fold cross-validation test. After resampling, I fitted the model to the newly resampled data set. This was done for `DOSE` and everything as a predictor respectively. Similar to what was performed above, the metrics were calculated with `collect_metrics()` function. 
+
+The following link was what I used as a referenced for the following code(s):
+
+[Resampling Reference](https://www.tidymodels.org/start/resampling/)
+```{r, modelperformance2}
+```
+
+In the initial resampling, the RMSE was 697 and 658 for model 1 (DOSE as predictor) and model 2 (everything as a predictor) respectively. These values are similar to the values produced in the original model assessment, with it being slightly lower for model 1 and slightly higher for model 2. The standard error was slightly higher for model 1 at 68.1 vs the 66.6 for model 2. 
+
+The assessment was then repeated with a new seed. 
+
+```{r, modelperformance3}
+```
+
+In the secondary resampling, the RMSE was 698 and 655 for model 1 (DOSE as predictor) and model 2 (everything as a predictor) respectively. These values are similar to the values produced in the original model assessment and the initial resampling. 
+
+Compared to the initial resampling, the RMSE are practically the same The standard error was slightly higher for model 1 at 62.1 vs the 58.8 for model 2, both of which were noticeably lower than the initial resampling assessment.
+
+In all cases, the model with `DOSE` as a predictor have a higher RMSE value.

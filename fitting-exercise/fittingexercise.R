@@ -1,4 +1,5 @@
 ## ---- packages --------
+#loading the packages needed for this exercise
 library(ggplot2)
 library(dplyr)
 library(here)
