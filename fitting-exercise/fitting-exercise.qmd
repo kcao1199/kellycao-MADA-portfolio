@@ -87,53 +87,179 @@ The data provided from the exercise above is splitted with 75% of it dedicated t
 ```{r, dataprep}
 ```
 
+## Model Fitting
 
-## Model Fitting 
-The data sets below is fitted to a linear regression model. The linear regression mode specification is initially declared and applied to the data. The first model(lm1) uses `DOSE` as a predictor and `Y` as the continuous outcome of interest. The second model (lm2) fits `Y`, the continuous outcome of interest to all predictors. Both models are fitted to the training data. 
+The data sets below is fitted to a linear regression model. The linear regression mode specification is initially declared and applied to the data. The first model(lm1) uses `DOSE` as a predictor and `Y` as the continuous outcome of interest. The second model (lm2) fits `Y`, the continuous outcome of interest to all predictors. Both models are fitted to the training data.
 
-I then fitted a null model to the training data as well, for future comparison and analysis. 
+I then fitted a null model to the training data as well, for future comparison and analysis.
 
 ```{r, modelfitting}
 ```
 
-
 ## Model Performance
-To determine the performance of the models above, I calculate the RMSE and R-squared value for each models. 
 
-I performed the predictions on each of the models. The predicted data is added to the original observed values for ease of comparison. From that, `metrics()` is used to calculate the performance metrics of the model predictions. 
+To determine the performance of the models above, I calculate the RMSE and R-squared value for each models.
 
-From that, we were able to receive the RMSE and R-squared values. 
+I performed the predictions on each of the models. The predicted data is added to the original observed values for ease of comparison. From that, `metrics()` is used to calculate the performance metrics of the model predictions.
+
+From that, we were able to receive the RMSE and R-squared values.
 
 I used the following resource as references for the code below:
 
-[Parsnip Reference](https://parsnip.tidymodels.org/reference/null_model.html) 
+[Parsnip Reference](https://parsnip.tidymodels.org/reference/null_model.html)
 
 [Metric Reference](https://yardstick.tidymodels.org/articles/metric-types.html)
 
 ```{r, modelperformance}
 ```
 
-From the `metrics()` function, we were able to see that the RMSE values were 703, 619, and 948 for model 1, model 2, and the null model respectively. All of these values were within expectation. 
+From the `metrics()` function, we were able to see that the RMSE values were 703, 619, and 948 for model 1, model 2, and the null model respectively. All of these values were within expectation.
 
 ## Model Performance 2
 
-To further assess the models, I re-sampled the data with a 10-fold cross-validation test. After resampling, I fitted the model to the newly resampled data set. This was done for `DOSE` and everything as a predictor respectively. Similar to what was performed above, the metrics were calculated with `collect_metrics()` function. 
+To further assess the models, I re-sampled the data with a 10-fold cross-validation test. After resampling, I fitted the model to the newly resampled data set. This was done for `DOSE` and everything as a predictor respectively. Similar to what was performed above, the metrics were calculated with `collect_metrics()` function.
 
 The following link was what I used as a referenced for the following code(s):
 
 [Resampling Reference](https://www.tidymodels.org/start/resampling/)
+
 ```{r, modelperformance2}
 ```
 
-In the initial resampling, the RMSE was 697 and 658 for model 1 (DOSE as predictor) and model 2 (everything as a predictor) respectively. These values are similar to the values produced in the original model assessment, with it being slightly lower for model 1 and slightly higher for model 2. The standard error was slightly higher for model 1 at 68.1 vs the 66.6 for model 2. 
+In the initial resampling, the RMSE was 697 and 658 for model 1 (DOSE as predictor) and model 2 (everything as a predictor) respectively. These values are similar to the values produced in the original model assessment, with it being slightly lower for model 1 and slightly higher for model 2. The standard error was slightly higher for model 1 at 68.1 vs the 66.6 for model 2.
 
-The assessment was then repeated with a new seed. 
+The assessment was then repeated with a new seed.
 
 ```{r, modelperformance3}
 ```
 
-In the secondary resampling, the RMSE was 698 and 655 for model 1 (DOSE as predictor) and model 2 (everything as a predictor) respectively. These values are similar to the values produced in the original model assessment and the initial resampling. 
+In the secondary resampling, the RMSE was 698 and 655 for model 1 (DOSE as predictor) and model 2 (everything as a predictor) respectively. These values are similar to the values produced in the original model assessment and the initial resampling.
 
 Compared to the initial resampling, the RMSE are practically the same The standard error was slightly higher for model 1 at 62.1 vs the 58.8 for model 2, both of which were noticeably lower than the initial resampling assessment.
 
 In all cases, the model with `DOSE` as a predictor have a higher RMSE value.
+
+# This section added by ERICK MOLLINEDO
+
+## Model Predictions
+
+First I created the dataframe `lmpreds` that will be used to plot the observed vs predicted values from the three models `lm1`, `lm2` and `null_fit`.
+
+```{r}
+#Create the variable `model` for the predicted vs observed dataframes, and assign values as model1, model1 or nullmodel.
+lm1_predict$model <- rep("model1", 90)
+lm2_predict$model <- rep("model2", 90)
+null_predictions$model <- rep("nullmodel", 90)
+
+#Bind all the dfs that contain predicted vs observed values from the 3 models
+lmpreds <- bind_rows(lm1_predict, lm2_predict, null_predictions)
+```
+
+Now, I created a graph that plots the predicted values against the observed values, and categorizing by model.
+
+```{r}
+#Creating the graph using ggplot
+ggplot(lmpreds, aes(x= Y, y= .pred, color= model, shape= model))+ #Select the X and Y variables and color and shape by `model`
+  geom_point(size= 4)+ #Choose size of the points
+  scale_shape_manual(values = c(0, 1, 2))+ #Manually set the shape for each `model` category
+  scale_color_manual(values = c("red", "olivedrab4", "steelblue2"))+ #Manually set the color for each `model` category
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "black")+ #Set the 45 degree abline
+  xlim(0, 5000)+ #Set the x limits
+  ylim(0, 5000)+ #Set the y limits
+  labs(x= "Observed values", y= "Predicted values")+ #Manually set the x and y labels
+  theme_classic()
+```
+
+Based on the previous plot that compares predicted vs observed values, it seems like model2 (with all the predictors) looks the best.
+
+Now, make a plot of predicted values against the residuals for Model 2 only. But first, the residuals have to be estimated in the `lm2_predict` dataframe.
+
+```{r}
+#Creat a new variable 'residuals' which is calculated as the difference of predicted and observed values
+lm2_predict <- lm2_predict %>% mutate(residuals = .pred - Y)
+```
+
+And then plotting the predicted values against residuals
+
+```{r}
+#Creating the graph using ggplot
+ggplot(lm2_predict, aes(x= .pred, y= residuals))+
+  geom_point(size= 4, color= "olivedrab4")+
+  geom_abline(intercept = 0, slope = 0, linetype = "dashed", color = "black")+ #Intercept line
+  ylim(-2500, 2500)+ #Make Y axis consistent
+  theme_classic()
+```
+
+Overall the pattern of residuals seems consistent, except that there are more negative values that also have higher values.
+
+## Model Predictions and Uncertainty
+
+Here, focusing on the bootstrap method to sample the data from model 2 and then get the uncertainty. First, setting the same seed used at the beginning and then use the `bootstraps` function to create 100 bootstraps on the train data.
+
+```{r}
+# Set Seed for reproducibility
+set.seed(rngseed)
+
+#Create 100 bootstraps on the 'train_data'
+model2_boot <- bootstraps(train_data, times = 100)
+```
+
+Now, creating a loop to fit the model to each of the bootstrap samples and make predictions from the model for the train data.
+
+```{r}
+#Create an empty vector to store predictions list
+bootpreds_list <- list()
+
+#Loop through each bootstrap sample
+for (i in 1:length(model2_boot)) {
+  # Extract the current bootstrap sample
+  bootstrap_sample <- analysis(model2_boot$splits[[i]])
+  
+  #Fit a linear model
+  lm_model <- lm(Y ~ ., data = bootstrap_sample)
+  
+  #Make predictions on the original train_data
+  bootpreds <- predict(lm_model, newdata = train_data)
+  
+  #Store predictions in the dataframe
+  bootpreds_list[[i]] <- bootpreds
+}
+
+#Print predictions for the first model
+print(bootpreds_list)
+```
+
+And now estimating the Median and 89% Confidence Intervals of the predictions. First, converting the list to a dataframe.
+
+```{r}
+#Convert the list to a dataframe 'bootpred_df'
+bootpred_df <- data.frame(do.call(cbind, bootpreds_list))
+
+# Compute the median and 89% confidence intervals for each observation
+medians <- apply(bootpred_df, 1, median)
+conf_intervals <- apply(bootpred_df, 1, function(x) quantile(x, c(0.055, 0.945)))
+
+# Combine median and confidence intervals into the 'results_df' dataframe
+results_df <- data.frame(Median = medians, Lower_Interval = conf_intervals[1,], Upper_Interval = conf_intervals[2,])
+
+#Combine the 'results_df' and 'bootpred_df' and the '.pred' column from the original df that fitted the model 'lm2_predict'
+bootpred_df <- cbind(bootpred_df, results_df, lm2_predict$.pred, lm2_predict$Y) %>% 
+  rename(median = 'Median', lower = 'Lower_Interval', upper = 'Upper_Interval', predictions = 'lm2_predict$.pred', observed = 'lm2_predict$Y') #Rename some of the columns
+```
+
+Now, creating a graph that plots the predicted values and the observed values of the original model fitting, adding the median and the 89% confidence intervals obtained from the bootstrap.
+
+```{r}
+#Create the plot
+ggplot(bootpred_df, aes(x = observed, y = predictions))+
+  geom_point(aes(y = predictions), color = "orangered2", size= 2)+ #Plot the predicted values
+  geom_point(aes(y = median), color = "steelblue2", size= 2)+ #Plot the median
+  geom_errorbar(aes(ymin = lower, ymax = upper), color = "black", width = 0.2)+ #Draw the upper and lower CI limits
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "darkgrey")+ #Draw the 45 degree line
+  xlim(0, 6000)+ #Set the x limits
+  ylim(0, 6000)+ #Set the y limits
+  labs(x= "Observed values", y= "Predicted values")+
+  theme_classic()
+```
+
+The previous graph plots predicted versus observed values and the 89% confidence intervals. What is observed is that some of the observations have higher uncertainty (black bars) than others but overall they look great. Based on the graph it seems like the model does a good job on predicting Y as a function of all the variables.
