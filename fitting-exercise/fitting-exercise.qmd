@@ -263,3 +263,33 @@ ggplot(bootpred_df, aes(x = observed, y = predictions))+
 ```
 
 The previous graph plots predicted versus observed values and the 89% confidence intervals. What is observed is that some of the observations have higher uncertainty (black bars) than others but overall they look great. Based on the graph it seems like the model does a good job on predicting Y as a function of all the variables.
+
+# Module 10: Part 3 (Kelly's Portion Again)
+I then used the model that performed best thus far (lm2, made from training) to create predicted values for the test data. I combined the observed and predicted  values in one data frame and evaluated the prediction with the metric() by measuring its RMSE value. The RMSE measures the average different between the predicted values (produced form the model) and the actual observed values. When assessing the newly produced predicted values, I received a RMSE of 515. This was the lowest calculated RMSE for any model thus far. 
+```{r}
+
+# Performing the prediction on the testing data set with the second model that was fitted with the training data set. I then combine the prediction with the observed values in the test_data
+test_prediction <- predict(lm2, new_data=test_data) %>%
+  bind_cols(test_data)
+
+#Estimating the metrics for the predictions I just made, like RMSE
+metrics(test_prediction, truth = Y, estimate = .pred)
+```
+
+When graphing the observed values (from the test data) with the predicted values, the plot shows a the data points generally following the 45 degree angle, indicating the predicted values were comparable to the observed values. When color coded, the difference between the observed and the newly predicted values become clear. 
+```{r}
+ggplot(test_prediction, 
+  aes(x = Y, y = .pred)) +
+  geom_point(aes(y = .pred), color = "black", size= 2) +
+  geom_point(aes(y = Y), color = "#ff9896", size= 3)+
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") + 
+  labs(x = "Observed Values", y = "Predicted Values", color = "Model", shape = "Model") +
+  xlim(0, 5000) + 
+  ylim(0, 5000)+
+  ggtitle("Prediction vs Observation")+
+  theme_bw()
+
+```
+### Conclusion
+
+Overall, the first linear regression fits on all three models, indicated that the model using all of the predictors performed the best. When performing the co-validation tests using bootstrap resampling, uncertainty was determined to be small and the model was proven to have predicted Y as a function of all the variables fairly well. The predicted values performed from the splitted, untouched part of the data set, proved to perform fairly well and matched the observed data set, in terms of behavior. Despite that, the predicted value(pink dots) shows some scatter, indicating other factors may be influencing its behavior. 
