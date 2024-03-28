@@ -25,7 +25,7 @@ website:
           - text: "Fitting Exercise"  
             file: fitting-exercise/fitting-exercise.qmd
           - text: "Machine Learning Model Exercise"
-            file: ml-model-exercise/ml-model-exercise.qmd
+            file: ml-models-exercise/ml-models-exercise.qmd
     right:
       - icon: github 
         href: https://github.com/kcao1199/kellycao-MADA-portfolio      
