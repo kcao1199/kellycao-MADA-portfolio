@@ -237,3 +237,6 @@ roc_auc_all <- roc(y_true, predict(logit_all, newdata = combined_data, type = "r
 print(roc_auc_main)
 print( roc_auc_all)
 
+## ---- Save --------
+saveRDS(combined_data, file = "./ml-models-exercise/combined_data.rds")
+

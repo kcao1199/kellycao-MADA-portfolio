@@ -1,3 +1,162 @@
 ---
-title: "ML Model Exercise"
+title: "Machine Learning Model Exercise"
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# Module 11: Machine Learning Model I
+
+The follow exercise uses the data set procured in Module 8 to practice model fitting, performance assessment, and model tuning with machine learning. 
+
+## Model Fitting
+
+#### Loading Packages and Data
+```{r, include=FALSE, cache=FALSE}
+library(here)
+library(knitr)
+read_chunk(here("./ml-models-exercise/ml-models-exercise.R"))
+```
+
+I start off with loading the libraries and data I will be using for this exercise. The data we are using is retrieved from Module 8's exercise, and it has 120 observations and 7 variables. These variables include: Y (observation), DOSE, AGE, SEX, RACE, WT, and HT.
+```{r, library}
+
+```
+
+```{r, loaddata}
+
+```
+
+#### Some Data Wrangling and Set-up 
+I first start with setting up a seed `rng`. This will show up several time throughout the exercise when sampling is occuring.
+```{r, reproducibility}
+
+```
+
+Some more data manipulation is first implemented before any modeling occurs. We used the `dplyr` package to mutate any observation of "7" or "88" into "3" for simplicity sake.
+```{r, datawrangling}
+
+```
+
+
+A correlation coefficient is reflected in a numeric value ranging from -1 to 1. The following script is used to implement a pairwise correlation to observe any variables that may appear to be correlated and potentially redundant. The following reference was used to create the plot. When observing the plots, one can see an extremely high correlation coefficient between the height and weight variable. 
+
+[Pairswise Correlation Reference](https://r-charts.com/correlation/ggpairs/)
+
+```{r, pairwisecorrelation}
+
+
+```
+
+Considering the high correlation between the height and weight variable, we have decided to create a new variable dubbed `BMI` to reflect the two variable, as the two of them can reflect redundancy in the data. The following link was used to calculate for `BMI`.
+
+[BMI Calculation Reference](https://www.cdc.gov/nccdphp/dnpao/growthcharts/training/bmiage/page5_2.html#:~:text=Formula%3A%20weight%20(lb)%20%2F,a%20conversion%20factor%20of%20703.)
+
+When viewing the data set, the sample reflects an adult population (based on the `AGE` variable). Based on the numeric values of the data set, I can only assume that the height is more accurately represented in kilograms(kg) and the height variable is represented in meters (m). I decided to convert the following variables into imperial units to used the BMI formula shared above.
+```{r, featureengineering}
+
+```
+
+#### Model Fitting and Performance
+
+I used the following links to assist in writing the script below to create and fit the three models of interest.
+[Model Reference](https://juliasilge.com/blog/lasso-the-office/)
+
+[Lasso Reference](https://bcheggeseth.github.io/253_fall_2021/lasso-logistic-regression.html)
+
+I first start with creating the `recipe` for the model(s). The same recipe will be used multiple time throughout the exercise. It factors `Y` as the outcome and the remaining variables as the predictor. 
+```{r, recipe}
+
+```
+
+I then set the model specification for the three models. 
+```{r, modelspecification}
+
+```
+
+A workflow is set up with the model specification created above. 
+```{r, workflow}
+
+```
+
+I then fit the models, as shown below. 
+```{r, modelfitting}
+
+```
+
+I then create a prediction for each of the fits. 
+```{r, modelprediction}
+
+```
+
+The predictions are then used to assess the performance of the models. `RMSE` is used as the assessment variable.
+```{r, modelperformance}
+
+```
+
+From the model performance, we can see that the Linear model and the LASSO model were both fairy similar in performance, but the Random Forest proved to be an outlier with a RMSE of 362. Thus, the Random Forest regression model proved to have performed the best thus far.
+
+We then continue to plot the observed vs predicted variables to visualize these performances. 
+
+```{r, modelplot}
+
+```
+
+Although, all of the models appear to have performed fairly well, it becomes apparent that the Random Forest regression model performs the best. With the predicted values showing in the black data points, we can see that the Random Forest model's prediction are most closely aligned with the observed values. 
+
+## Model Tuning
+
+We then proceed to tune the LASSO and Random Forest models, but we are doing so without cross-validation first. 
+
+#### Lasso Regression Model
+
+The following reference was used to assist in writing the following script. 
+
+[Tuning Model Reference](https://www.tidymodels.org/start/tuning/)
+
+
+```{r, lassomodeltuning}
+
+```
+
+**LASSO Behavior Explanation** : 
+
+LASSO Regression and the applied penalty imposes a constraint on the absolute size of the coefficient. When the penalty parameters are low, the regularization effect is weak. 
+
+The LASSO plot shows higher regularization is correlating with higher RMSE, indicating lagging performance. This also reflects the model becomes simpler. he RMSE does not go lower than the value found from the linear model because LASSO aims to balance bias and variance, preventing overfitting while maintaining model simplicity.
+
+
+#### Random Forest Regression Model
+
+Model tuning is then performed on the Random Foreset Regression model. This is performed without cross validation as well.
+```{r, rfmodeltuning}
+
+```
+
+From the plot, we can see that the RMSE decreases with the number of randomly selected predictors (mtry) increases. The color coded aspect shows that the greater node sizes (min_n) also correlates with increasing RMSE and vice versa.
+
+## Model Tuning with Cross Validation 
+
+The previous two model tuning is replicated with 5-fold cross validation test repeated 5 times. This is performed with `vfold_cv()` function in the `resamples`.
+```{r, lassotuningcv}
+
+```
+
+The newly formed LASSO model plot tuned with cross-validation shows that (similar to the previous LASSO) the model performs best with lower penalty values (as indicated by the resulting RMSE values). 
+
+The model tuning is replicated with cross validation for the random forest regression model, as well. No other parameters has been changed. 
+```{r, rftuningcv}
+
+```
+
+From the plot, we can see that the best performance are shown with higher values of randomly selected predictors(mtry) and larger node size(min_n). This differs from the previous Random Forest model, as the best performance was reflected with the smallest node size. This difference can be shown in the plot at mtry=2, where the switch up occurs. 
+
+## Conclusion
+When initially comparing the LASSO Regression Model and the Random Forest model, the Random Forest Model far outstripped the LASSO model in terms of performance. 
+
+When we applied tuning to the LASSO model, we can see that the model performed well with lower penalty, and too much regularization led to overfitting. When the tuning was applied to the random forest model, the number of randomly selected predictors increasing led to RMSE decreasing. 
+
+When we applied cross validation, we can see in the plots that the lowest RMSE values were significantly larger than its model(s) counterpart without cross validation.  
+
+Overall, the LASSO model proves to have performed the best between the two model when observing the models after it is tuned and after cross validation is added to the tuning both. 
