@@ -1,18 +1,15 @@
 ---
 title: "Kelly Cao's Website and Data Analysis Portfolio"
 ---
-![](Images/KellyCao.jpg){width=50% height=30%}
-
 
 # Hello!
 
 
 **Welcome to my website and _data analysis portfolio._ **
 
-I'll be compiling my projects for my Spring 2024 MADA class here.
-
+I compiled my projects for my Spring 2024 MADA class here. Feel free to read about me in the `About Me` tab above. 
 
 * Please use the `Menu Bar` above to look around.
 * Have fun!
-* Last Updated 01/12/2024
+* Last Updated 04/12/2024
 
